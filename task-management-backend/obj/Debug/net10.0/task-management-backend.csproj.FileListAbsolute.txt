@@ -367,3 +367,7 @@
 /Users/santosh.yadav/task-management/task-management-backend/obj/Debug/net10.0/task-management-backend.pdb
 /Users/santosh.yadav/task-management/task-management-backend/obj/Debug/net10.0/task-management-backend.genruntimeconfig.cache
 /Users/santosh.yadav/task-management/task-management-backend/obj/Debug/net10.0/ref/task-management-backend.dll
+/Users/santosh.yadav/task-management/task-management-backend/bin/Debug/net10.0/Mapster.dll
+/Users/santosh.yadav/task-management/task-management-backend/bin/Debug/net10.0/Mapster.Core.dll
+/Users/santosh.yadav/task-management/task-management-backend/bin/Debug/net10.0/Mapster.DependencyInjection.dll
+/Users/santosh.yadav/task-management/task-management-backend/bin/Debug/net10.0/BCrypt.Net-Next.dll

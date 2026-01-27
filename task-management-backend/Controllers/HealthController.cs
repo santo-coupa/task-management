@@ -1,6 +1,15 @@
+using Microsoft.AspNetCore.Mvc;
+
 namespace task_management_backend.Controllers;
 
-public class HealthController
+[ApiController]
+[Route("[controller]")]
+public class HealthController : ControllerBase
 {
-  
+  [HttpGet]
+  public IActionResult Get()
+  {
+    return Ok("Healthy");
+  }
+
 }

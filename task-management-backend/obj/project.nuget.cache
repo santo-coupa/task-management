@@ -1,10 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "cFT+J0SHdiw=",
+  "dgSpecHash": "IfKMfR8U5xw=",
   "success": true,
   "projectFilePath": "/Users/santosh.yadav/task-management/task-management-backend/task-management-backend.csproj",
   "expectedPackageFiles": [
+    "/Users/santosh.yadav/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/Users/santosh.yadav/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
+    "/Users/santosh.yadav/.nuget/packages/mapster/10.0.0-pre01/mapster.10.0.0-pre01.nupkg.sha512",
+    "/Users/santosh.yadav/.nuget/packages/mapster.core/10.0.0-pre01/mapster.core.10.0.0-pre01.nupkg.sha512",
+    "/Users/santosh.yadav/.nuget/packages/mapster.dependencyinjection/10.0.0-pre01/mapster.dependencyinjection.10.0.0-pre01.nupkg.sha512",
     "/Users/santosh.yadav/.nuget/packages/microsoft.aspnetcore.openapi/10.0.2/microsoft.aspnetcore.openapi.10.0.2.nupkg.sha512",
     "/Users/santosh.yadav/.nuget/packages/microsoft.build.framework/18.0.2/microsoft.build.framework.18.0.2.nupkg.sha512",
     "/Users/santosh.yadav/.nuget/packages/microsoft.codeanalysis.analyzers/3.11.0/microsoft.codeanalysis.analyzers.3.11.0.nupkg.sha512",
