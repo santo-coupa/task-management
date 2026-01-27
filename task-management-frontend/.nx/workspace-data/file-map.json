@@ -47,169 +47,87 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": ".nx/workspace-data/vitest-7098450835089722927.hash",
-        "hash": "14378293446417017821"
-      },
-      {
-        "file": "vitest.workspace.ts",
-        "hash": "4665328684042819579"
-      },
-      {
-        "file": "UML-Diagrams/Task_Management-Class.pdf",
-        "hash": "16028605335744975910"
-      },
-      {
-        "file": ".nx/workspace-data/eslint-2654242865465226088.hash",
-        "hash": "16735620220650853214"
-      },
-      {
-        "file": ".nx/workspace-data/nx_files.nxt",
-        "hash": "14486423238925700063"
-      },
-      {
-        "file": ".nx/workspace-data/source-maps.json",
-        "hash": "12266216156193073093"
-      },
-      {
         "file": ".nx/workspace-data/67C6A822-142D-501F-8CD0-68CBEE28C9A8.db-wal",
-        "hash": "718173955856760985"
+        "hash": "1036897992691174975"
       },
       {
-        "file": ".nx/workspace-data/vite-7556005483977466535.hash",
-        "hash": "15185855821992207734"
-      },
-      {
-        "file": ".nx/workspace-data/d/server-process.json",
-        "hash": "5830175464956246690"
-      },
-      {
-        "file": "package.json",
-        "hash": "3195577925827799190"
-      },
-      {
-        "file": ".nx/workspace-data/67C6A822-142D-501F-8CD0-68CBEE28C9A8.db-shm",
-        "hash": "9332701601090407327"
-      },
-      {
-        "file": ".nx/workspace-data/file-map.json",
-        "hash": "12397399165625987448"
-      },
-      {
-        "file": ".nx/workspace-data/lockfile-nodes.hash",
-        "hash": "513233614807951215"
+        "file": ".nx/workspace-data/vitest-13915884414654480796.hash",
+        "hash": "11177924381084145714"
       },
       {
         "file": "package-lock.json",
         "hash": "5325235383312791070"
       },
       {
-        "file": ".nx/workspace-data/parsed-lock-file.dependencies.json",
-        "hash": "15618025261598939513"
-      },
-      {
-        "file": ".nx/workspace-data/vite-9347777721732807074.hash",
-        "hash": "16315270382103803322"
-      },
-      {
-        "file": ".nx/workspace-data/project-graph.json",
-        "hash": "15911025482805996536"
-      },
-      {
-        "file": ".nx/workspace-data/docker-9356765260042298600.hash",
-        "hash": "1389868326933519382"
-      },
-      {
-        "file": "UML-Diagrams/Task_Management-ER.pdf",
-        "hash": "8586978646059849434"
-      },
-      {
-        "file": "tsconfig.base.json",
-        "hash": "7639533689706529928"
-      },
-      {
-        "file": ".nx/workspace-data/parsed-lock-file.nodes.json",
-        "hash": "1137681674179113438"
+        "file": ".nx/workspace-data/67C6A822-142D-501F-8CD0-68CBEE28C9A8.db-shm",
+        "hash": "10659107998700835941"
       },
       {
         "file": "nx.json",
         "hash": "14832769358959000710"
       },
       {
-        "file": ".nx/workspace-data/playwright-5186013267177752385.hash",
-        "hash": "3252514727841580144"
-      },
-      {
-        "file": ".nx/workspace-data/lockfile-dependencies.hash",
-        "hash": "513233614807951215"
-      },
-      {
         "file": "eslint.config.mjs",
         "hash": "12283138330301673180"
       },
       {
-        "file": ".nx/workspace-data/67C6A822-142D-501F-8CD0-68CBEE28C9A8.db",
-        "hash": "11367727899516297474"
+        "file": ".nx/workspace-data/playwright-5186013267177752385.hash",
+        "hash": "3252514727841580144"
       },
       {
-        "file": ".nx/workspace-data/vitest-13915884414654480796.hash",
-        "hash": "11177924381084145714"
+        "file": ".nx/workspace-data/nx_files.nxt",
+        "hash": "4647247397566008307"
+      },
+      {
+        "file": ".nx/workspace-data/docker-9356765260042298600.hash",
+        "hash": "1389868326933519382"
+      },
+      {
+        "file": ".nx/workspace-data/source-maps.json",
+        "hash": "12266216156193073093"
+      },
+      {
+        "file": ".nx/workspace-data/vitest-7098450835089722927.hash",
+        "hash": "3981621180383894824"
+      },
+      {
+        "file": ".nx/workspace-data/d/server-process.json",
+        "hash": "9370887193615865773"
+      },
+      {
+        "file": ".nx/workspace-data/project-graph.json",
+        "hash": "9659187631803131590"
+      },
+      {
+        "file": ".nx/workspace-data/vite-7556005483977466535.hash",
+        "hash": "16484653762341986676"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "7639533689706529928"
+      },
+      {
+        "file": ".nx/workspace-data/file-map.json",
+        "hash": "17461642916700335240"
+      },
+      {
+        "file": ".nx/workspace-data/vite-9347777721732807074.hash",
+        "hash": "16315270382103803322"
+      },
+      {
+        "file": ".nx/workspace-data/eslint-2654242865465226088.hash",
+        "hash": "7550803592850941624"
+      },
+      {
+        "file": "vitest.workspace.ts",
+        "hash": "4665328684042819579"
+      },
+      {
+        "file": "package.json",
+        "hash": "3195577925827799190"
       }
     ],
     "projectFileMap": {
-      "shop-e2e": [
-        {
-          "file": "apps/shop-e2e/eslint.config.mjs",
-          "hash": "1172734138943286526",
-          "deps": [
-            "npm:eslint-plugin-playwright"
-          ]
-        },
-        {
-          "file": "apps/shop-e2e/playwright.config.ts",
-          "hash": "8248500361974969381",
-          "deps": [
-            "npm:@playwright/test",
-            "npm:@nx/playwright",
-            "npm:@nx/devkit"
-          ]
-        },
-        {
-          "file": "apps/shop-e2e/project.json",
-          "hash": "12292221105165577258"
-        },
-        {
-          "file": "apps/shop-e2e/src/navigation-flow.spec.ts",
-          "hash": "10495328127939779585",
-          "deps": [
-            "npm:@playwright/test"
-          ]
-        },
-        {
-          "file": "apps/shop-e2e/src/product-detail.spec.ts",
-          "hash": "13814388082959474142",
-          "deps": [
-            "npm:@playwright/test"
-          ]
-        },
-        {
-          "file": "apps/shop-e2e/src/product-listing.spec.ts",
-          "hash": "12283231736040255217",
-          "deps": [
-            "npm:@playwright/test"
-          ]
-        },
-        {
-          "file": "apps/shop-e2e/src/shop-homepage.spec.ts",
-          "hash": "2957712571253401230",
-          "deps": [
-            "npm:@playwright/test"
-          ]
-        },
-        {
-          "file": "apps/shop-e2e/tsconfig.json",
-          "hash": "15726545290547512047"
-        }
-      ],
       "shop": [
         {
           "file": "apps/shop/eslint.config.mjs",
@@ -401,6 +319,60 @@
             "npm:@analogjs/vite-plugin-angular",
             "npm:@nx/vite"
           ]
+        }
+      ],
+      "shop-e2e": [
+        {
+          "file": "apps/shop-e2e/eslint.config.mjs",
+          "hash": "1172734138943286526",
+          "deps": [
+            "npm:eslint-plugin-playwright"
+          ]
+        },
+        {
+          "file": "apps/shop-e2e/playwright.config.ts",
+          "hash": "8248500361974969381",
+          "deps": [
+            "npm:@playwright/test",
+            "npm:@nx/playwright",
+            "npm:@nx/devkit"
+          ]
+        },
+        {
+          "file": "apps/shop-e2e/project.json",
+          "hash": "12292221105165577258"
+        },
+        {
+          "file": "apps/shop-e2e/src/navigation-flow.spec.ts",
+          "hash": "10495328127939779585",
+          "deps": [
+            "npm:@playwright/test"
+          ]
+        },
+        {
+          "file": "apps/shop-e2e/src/product-detail.spec.ts",
+          "hash": "13814388082959474142",
+          "deps": [
+            "npm:@playwright/test"
+          ]
+        },
+        {
+          "file": "apps/shop-e2e/src/product-listing.spec.ts",
+          "hash": "12283231736040255217",
+          "deps": [
+            "npm:@playwright/test"
+          ]
+        },
+        {
+          "file": "apps/shop-e2e/src/shop-homepage.spec.ts",
+          "hash": "2957712571253401230",
+          "deps": [
+            "npm:@playwright/test"
+          ]
+        },
+        {
+          "file": "apps/shop-e2e/tsconfig.json",
+          "hash": "15726545290547512047"
         }
       ]
     }
