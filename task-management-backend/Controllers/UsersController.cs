@@ -35,7 +35,7 @@ public class UsersController : ControllerBase
 
       var user = new User
       {
-        ID = Guid.CreateVersion7(),
+        Id = Guid.CreateVersion7(),
         Username = request.Username,
         PasswordHashed = BCrypt.Net.BCrypt.HashPassword(request.Password),
         Email = request.Email,
