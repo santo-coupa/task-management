@@ -5,7 +5,7 @@ using task_management_backend.Enums;
 [Table("UserTasks")]
 public class UserTask
 {
-  public int Id { get; set; }
+  public Guid Id { get; set; }
   public string Title { get; set; } = null!;
   public TaskStatus Status { get; set; }
 

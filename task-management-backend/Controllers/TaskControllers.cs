@@ -27,7 +27,7 @@ public class TasksController : ControllerBase
   }
 
   [HttpPost(Name = "CreateTask")]
-  public ActionResult<int> Create([FromBody] CreateTaskRequest request)
+  public ActionResult<GetTaskResponse> Create([FromBody] CreateTaskRequest request)
   {
     var userExists = DbContext.Users.Any(u => u.Id == request.AssignedUserId);
 
@@ -38,6 +38,7 @@ public class TasksController : ControllerBase
 
     var task = new UserTask
     {
+      Id = Guid.CreateVersion7(),
       Title = request.Title,
       Status = request.Status,
       AssignedUserId = request.AssignedUserId
@@ -46,6 +47,6 @@ public class TasksController : ControllerBase
     DbContext.UserTasks.Add(task);
     DbContext.SaveChanges();
 
-    return task.Id;
+    return task.Adapt<GetTaskResponse>();
   }
 }
