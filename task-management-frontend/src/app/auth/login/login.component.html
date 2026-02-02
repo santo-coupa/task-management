@@ -1,15 +1,30 @@
-<h1>Login</h1>
+<div class="login-container">
+  <div class="login-card">
 
-<input
-  type="email"
-  placeholder="Email"
-  [(ngModel)]="email"
-/>
+    <div class="field">
+      <label>Email</label>
+      <input
+        type="email"
+        pInputText
+        [(ngModel)]="email"
+      />
+    </div>
 
-<input
-  type="password"
-  placeholder="Password"
-  [(ngModel)]="password"
-/>
+    <div class="field">
+      <label>Password</label>
+      <p-password
+        [(ngModel)]="password"
+        [feedback]="false"
+        [toggleMask]="true"
+      ></p-password>
+    </div>
 
-<button (click)="login()">Login</button>
+    <button
+      pButton
+      label="Login"
+      icon="pi pi-sign-in"
+      (click)="login()"
+    ></button>
+
+  </div>
+</div>
