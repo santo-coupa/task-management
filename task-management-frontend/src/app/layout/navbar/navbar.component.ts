@@ -1,20 +1,48 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+
+import { MenubarModule } from 'primeng/menubar';
+import { MenuItem } from 'primeng/api';
+
 import { AuthService } from '../../core/services/auth.service';
-import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, ButtonModule],
+  imports: [CommonModule, MenubarModule],
   templateUrl: './navbar.component.html',
 })
 export class NavbarComponent {
+  items: MenuItem[] = [];
+
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) {
+    this.items = [
+      {
+        label: 'Dashboard',
+        icon: 'pi pi-home',
+        routerLink: '/dashboard',
+      },
+      {
+        label: 'Tasks',
+        icon: 'pi pi-list',
+        routerLink: '/tasks',
+      },
+      {
+        label: 'Users',
+        icon: 'pi pi-users',
+        routerLink: '/users',
+      },
+      {
+        label: 'Logout',
+        icon: 'pi pi-sign-out',
+        command: () => this.logout(),
+      },
+    ];
+  }
 
   logout(): void {
     this.authService.logout();
