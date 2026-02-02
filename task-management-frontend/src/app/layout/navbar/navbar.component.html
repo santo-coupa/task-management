@@ -1,0 +1,15 @@
+<nav style="display:flex; gap:16px; background:#eee; padding:12px">
+  <a routerLink="/dashboard" style="cursor:pointer; text-decoration:underline">
+    Dashboard
+  </a>
+  <a routerLink="/tasks" style="cursor:pointer; text-decoration:underline">
+    Tasks
+  </a>
+  <a routerLink="/users" style="cursor:pointer; text-decoration:underline">
+    Users
+  </a>
+
+  <span style="flex:1"></span>
+
+  <button (click)="logout()">Logout</button>
+</nav>
