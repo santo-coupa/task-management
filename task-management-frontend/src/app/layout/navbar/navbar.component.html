@@ -1,1 +1,23 @@
-<p-menubar [model]="items"></p-menubar>
+<p-menubar [model]="menuItems">
+  <ng-template pTemplate="end">
+    <div
+      class="profile"
+      (click)="profileMenu.toggle($event)"
+    >
+      <div class="avatar">
+        👤
+      </div>
+      <span class="name">
+        {{ displayName }}
+      </span>
+      <span class="chevron">▾</span>
+    </div>
+
+    <p-menu
+      #profileMenu
+      [popup]="true"
+      [model]="profileItems"
+      appendTo="body"
+    ></p-menu>
+  </ng-template>
+</p-menubar>
