@@ -4,6 +4,8 @@ using task_management_backend;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using task_management_backend.Services;
+using task_management_backend.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Mapster
 builder.Services.AddMapster();
+
+builder.Services.AddScoped<ITaskService, TaskService>();
 
 // Swagger / OpenAPI
 builder.Services.AddOpenApi();

@@ -4,6 +4,7 @@ using task_management_backend.Database;
 using task_management_backend.Dto;
 using task_management_backend.Dto.Tasks;
 using task_management_backend.Enums;
+using task_management_backend.Services.Interfaces;
 
 namespace task_management_backend.Controllers;
 
@@ -12,10 +13,12 @@ namespace task_management_backend.Controllers;
 public class TasksController : ControllerBase
 {
   private readonly ApplicationDbContext DbContext;
+  private readonly ITaskService TaskService;
 
-  public TasksController(ApplicationDbContext dbContext)
+  public TasksController(ApplicationDbContext dbContext, ITaskService taskService)
   {
     DbContext = dbContext;
+    TaskService = taskService;
   }
 
   [HttpGet(Name = "GetTasks")]
@@ -29,24 +32,14 @@ public class TasksController : ControllerBase
   [HttpPost(Name = "CreateTask")]
   public ActionResult<GetTaskResponse> Create([FromBody] CreateTaskRequest request)
   {
-    var userExists = DbContext.Users.Any(u => u.Id == request.AssignedUserId);
+    var task =TaskService.CreateTask(request);
+    return task.Adapt<GetTaskResponse>();
+  }
 
-    if (!userExists)
-    {
-      return BadRequest("Assigned user does not exist");
-    }
-
-    var task = new UserTask
-    {
-      Id = Guid.CreateVersion7(),
-      Title = request.Title,
-      Status = request.Status,
-      AssignedUserId = request.AssignedUserId
-    };
-
-    DbContext.UserTasks.Add(task);
-    DbContext.SaveChanges();
-
+  [HttpPatch("{id:guid}", Name = "UpdateTask")]
+  public ActionResult<GetTaskResponse> Update([FromRoute] Guid id, [FromBody] UpdateTaskRequest request)
+  {
+    var task =TaskService.UpdateTask(id,request);
     return task.Adapt<GetTaskResponse>();
   }
 }
