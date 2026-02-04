@@ -28,6 +28,7 @@ builder.Services.AddMapster();
 
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Swagger / OpenAPI
 builder.Services.AddOpenApi();
