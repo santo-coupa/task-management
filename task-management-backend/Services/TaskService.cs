@@ -13,6 +13,11 @@ public class TaskService : ITaskService
     DbContext = dbContext;
   }
 
+  public IEnumerable<UserTask> GetTasks()
+  {
+    return DbContext.UserTasks.ToList();
+  }
+
   UserTask ITaskService.CreateTask(CreateTaskRequest request)
   {
     var userExists = DbContext.Users.Any(u => u.Id == request.AssignedUserId);
