@@ -16,40 +16,50 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent {
-  menuItems: MenuItem[];
-  profileItems: MenuItem[];
-  userInitial: string;
+  menuItems: MenuItem[] = [];
+  profileItems: MenuItem[] = [];
+
+  displayName = '';
+  userInitial = '';
 
   constructor(
     private authService: AuthService,
     private router: Router,
   ) {
-    const email = this.authService.getUser()?.email ?? 'User';
-    this.userInitial = email.charAt(0).toUpperCase();
+    const user = this.authService.getUser();
+    const email = user?.email ?? 'User';
+
+    this.displayName = email.split('@')[0];
+    this.userInitial = this.displayName.charAt(0).toUpperCase();
 
     this.menuItems = [
       { label: 'Dashboard', routerLink: '/dashboard' },
       { label: 'Tasks', routerLink: '/tasks' },
-      { label: 'Users', routerLink: '/users' },
     ];
 
+    if (this.authService.hasRole('ADMIN')) {
+      this.menuItems.push({
+        label: 'Users',
+        routerLink: '/users',
+      });
+    }
+
     this.profileItems = [
-      { label: email, disabled: true },
+      {
+        label: email,
+        disabled: true,
+      },
       { separator: true },
       {
         label: 'Logout',
+        icon: 'pi pi-sign-out',
         command: () => this.logout(),
       },
     ];
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
-  }
-
-  get displayName(): string {
-    const email = this.authService.getUser()?.email ?? 'User';
-    return email.split('@')[0]; // "santosh.yadav"
   }
 }

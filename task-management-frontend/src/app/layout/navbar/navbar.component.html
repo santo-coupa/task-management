@@ -5,11 +5,13 @@
       (click)="profileMenu.toggle($event)"
     >
       <div class="avatar">
-        👤
+        {{ userInitial }}
       </div>
+
       <span class="name">
         {{ displayName }}
       </span>
+
       <span class="chevron">▾</span>
     </div>
 

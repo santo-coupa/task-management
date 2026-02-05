@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { authRoutes } from './auth/auth.routes';
 import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 import { DefaultLayoutComponent } from './layout/default-layout/default-layout.component';
 
 export const routes: Routes = [
@@ -20,10 +20,14 @@ export const routes: Routes = [
       },
       {
         path: 'tasks',
+        canActivate: [roleGuard],
+        data: {roles : ['ADMIN', 'USER']},
         loadChildren: () => import('./tasks/tasks.routes').then((m) => m.tasksRoutes),
       },
       {
         path: 'users',
+        canActivate: [roleGuard],
+        data: {roles : ['ADMIN']},
         loadChildren: () => import('./users/users.routes').then((m) => m.usersRoutes),
       },
     ],
