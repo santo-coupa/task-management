@@ -67,7 +67,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// 🔑 AUTHENTICATION MUST COME BEFORE AUTHORIZATION
+// AUTHENTICATION MUST COME BEFORE AUTHORIZATION
 app.UseAuthentication();
 app.UseAuthorization();
 
