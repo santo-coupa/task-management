@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-default-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink],
-  templateUrl: './default-layout.html',
+  imports: [RouterOutlet, NavbarComponent],
+  templateUrl: './default-layout.component.html',
 })
 export class DefaultLayoutComponent {}
 
