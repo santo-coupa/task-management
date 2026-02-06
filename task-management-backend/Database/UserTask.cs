@@ -7,7 +7,7 @@ public class UserTask
 {
   public Guid Id { get; set; }
   public string Title { get; set; } = null!;
-  public TaskStatus Status { get; set; }
+  public UserTaskStatus Status { get; set; }
 
   public Guid AssignedUserId { get; set; }
   public User AssignedUser { get; set; } = null!;

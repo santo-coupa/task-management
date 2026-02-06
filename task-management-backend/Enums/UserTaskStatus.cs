@@ -1,5 +1,5 @@
 namespace task_management_backend.Enums;
-public enum TaskStatus
+public enum UserTaskStatus
 {
     pending = 0,
     inprogress = 1,

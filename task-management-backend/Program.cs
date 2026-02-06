@@ -31,7 +31,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Swagger / OpenAPI
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // =======================
 // 2. JWT AUTHENTICATION
@@ -72,7 +73,8 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-  app.MapOpenApi();
+  app.UseSwagger();
+  app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
