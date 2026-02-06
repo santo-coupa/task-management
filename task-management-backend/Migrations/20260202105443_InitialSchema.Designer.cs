@@ -12,8 +12,8 @@ using task_management_backend;
 namespace task_management_backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260129110604_RenameUserTaskTable")]
-    partial class RenameUserTaskTable
+    [Migration("20260202105443_InitialSchema")]
+    partial class InitialSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,11 +50,9 @@ namespace task_management_backend.Migrations
 
             modelBuilder.Entity("task_management_backend.Database.UserTask", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("AssignedUserId")
                         .HasColumnType("uuid");

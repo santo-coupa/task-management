@@ -1,37 +1,44 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace task_management_backend.Migrations
 {
     /// <inheritdoc />
-    public partial class SyncUserAndUserTaskModel : Migration
+    public partial class InitialSchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "ID",
-                table: "Users",
-                newName: "Id");
-
             migrationBuilder.CreateTable(
-                name: "UserTask",
+                name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Username = table.Column<string>(type: "text", nullable: false),
+                    PasswordHashed = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserTasks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     AssignedUserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserTask", x => x.Id);
+                    table.PrimaryKey("PK_UserTasks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserTask_Users_AssignedUserId",
+                        name: "FK_UserTasks_Users_AssignedUserId",
                         column: x => x.AssignedUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -39,8 +46,8 @@ namespace task_management_backend.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserTask_AssignedUserId",
-                table: "UserTask",
+                name: "IX_UserTasks_AssignedUserId",
+                table: "UserTasks",
                 column: "AssignedUserId");
         }
 
@@ -48,12 +55,10 @@ namespace task_management_backend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "UserTask");
+                name: "UserTasks");
 
-            migrationBuilder.RenameColumn(
-                name: "Id",
-                table: "Users",
-                newName: "ID");
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

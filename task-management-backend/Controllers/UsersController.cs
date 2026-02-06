@@ -1,48 +1,40 @@
 using Mapster;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using task_management_backend.Database;
 using task_management_backend.Dto;
+using task_management_backend.Services.Interfaces;
 
 namespace task_management_backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-
 public class UsersController : ControllerBase
 {
-    private readonly ApplicationDbContext DbContext;
+  private readonly IUserService UserService;
 
-    public UsersController(ApplicationDbContext dbContext)
+  public UsersController(IUserService userService)
+  {
+    UserService = userService;
+  }
+
+  [HttpGet(Name = "GetUsers")]
+  public IEnumerable<GetUserResponse> Get()
+  {
+    var users = UserService.GetUsers();
+    return users.Adapt<GetUserResponse[]>();
+  }
+
+  [HttpPost(Name = "CreateUser")]
+  public ActionResult<GetUserResponse> Create(
+    [FromBody] CreateUserRequest request)
+  {
+    try
     {
-      DbContext = dbContext;
+      var user = UserService.CreateUser(request);
+      return user.Adapt<GetUserResponse>();
     }
-    [HttpGet(Name = "GetUsers")]
-    public IEnumerable<GetUserResponse> Get()
+    catch (ArgumentException ex)
     {
-      return DbContext.Users.ToList().Adapt<GetUserResponse[]>();
+      return BadRequest(ex.Message);
     }
-
-    [HttpPost(Name = "CreateUser")]
-    public ActionResult<GetUserResponse> Create([FromBody] CreateUserRequest request)
-    {
-      var emailExists = DbContext.Users.Any(u => u.Email == request.Email);
-
-      if (emailExists)
-      {
-        return BadRequest("Email already exists");
-      }
-
-      var user = new User
-      {
-        Id = Guid.CreateVersion7(),
-        Username = request.Username,
-        PasswordHashed = BCrypt.Net.BCrypt.HashPassword(request.Password),
-        Email = request.Email,
-        };
-
-        DbContext.Users.Add(user);
-        DbContext.SaveChanges();
-        return user.Adapt<GetUserResponse>();
-    }
+  }
 }
