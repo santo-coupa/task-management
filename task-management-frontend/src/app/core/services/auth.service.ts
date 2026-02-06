@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import {Role, User } from '../models/user.model';
+import { User } from '../models/user.model';
+import { Role } from '../models/role.enum';
 
 const STORAGE_KEY = 'auth_user';
 
 @Injectable({
   providedIn: 'root',
 })
-
 export class AuthService {
   private user: User | null = null;
 
@@ -15,48 +15,42 @@ export class AuthService {
   }
 
   login(email: string, password: string): boolean {
-    if(!email || !password){
-      return false;
-    }
-
-    const role : Role = email.includes('admin') ? 'ADMIN' : 'USER';
-
     this.user = {
-      id : '1',
+      id: '1',
       email,
-      role,
+      role: email.includes('admin') ? Role.ADMIN : Role.USER,
     };
 
     this.persistUser();
     return true;
   }
 
-  logout() : void{
+  logout(): void {
     this.user = null;
     localStorage.removeItem(STORAGE_KEY);
   }
 
-  isAuthenticated() : boolean{
+  isAuthenticated(): boolean {
     return this.user !== null;
   }
 
-  getUser() : User | null{
+  getUser(): User | null {
     return this.user;
   }
 
-  hasRole(role : Role) : boolean{
+  hasRole(role: Role): boolean {
     return this.user?.role === role;
   }
 
-  private persistUser(): void{
-    if(this.user){
+  private persistUser(): void {
+    if (this.user) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.user));
     }
   }
 
-  private restoreUser() : void{
+  private restoreUser(): void {
     const stored = localStorage.getItem(STORAGE_KEY);
-    if(stored){
+    if (stored) {
       this.user = JSON.parse(stored);
     }
   }

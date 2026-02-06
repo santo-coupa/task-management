@@ -1,37 +1,27 @@
-import { inject } from "@angular/core";
-import {
-  CanActivateFn,
-  Router,
-  UrlTree,
-  ActivatedRouteSnapshot,
-} from '@angular/router';
-import { AuthService } from "../core";
-import { Role } from "../core";
+import { inject } from '@angular/core';
+import { CanActivateFn, Router, UrlTree, ActivatedRouteSnapshot } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { Role } from '../models/role.enum';
 
-export const roleGuard : CanActivateFn = (
-  route : ActivatedRouteSnapshot,
-) : boolean | UrlTree => {
-  
+export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot): boolean | UrlTree => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
-  if(!auth.isAuthenticated()){
+  if (!auth.isAuthenticated()) {
     return router.createUrlTree(['/auth/login']);
   }
 
-  const allowedRoles = route.data['roles'] as Role[];
+  const allowedRoles = route.data?.['roles'] as Role[] | undefined;
 
-  if(!allowedRoles || allowedRoles.length === 0){
+  if (!allowedRoles || allowedRoles.length === 0) {
     return true;
   }
 
-  const hasAccess = allowedRoles.some(role =>
-    auth.hasRole(role)
-  );
+  const hasAccess = allowedRoles.some((role) => auth.hasRole(role));
 
-  if(hasAccess){
+  if (hasAccess) {
     return true;
   }
 
   return router.createUrlTree(['/dashboard']);
-}
+};

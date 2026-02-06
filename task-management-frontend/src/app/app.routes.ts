@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 import { DefaultLayoutComponent } from './layout/default-layout/default-layout.component';
+import { Role } from './core/models/role.enum';
 
 export const routes: Routes = [
   {
@@ -21,13 +22,13 @@ export const routes: Routes = [
       {
         path: 'tasks',
         canActivate: [roleGuard],
-        data: {roles : ['ADMIN', 'USER']},
+        data: {roles : [Role.ADMIN, Role.USER]},
         loadChildren: () => import('./tasks/tasks.routes').then((m) => m.tasksRoutes),
       },
       {
         path: 'users',
         canActivate: [roleGuard],
-        data: {roles : ['ADMIN']},
+        data: {roles : [Role.ADMIN]},
         loadChildren: () => import('./users/users.routes').then((m) => m.usersRoutes),
       },
     ],

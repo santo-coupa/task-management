@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -7,6 +7,7 @@ import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 
 import { AuthService } from '../../core/services/auth.service';
+import { Role } from '../../core/models/role.enum';
 
 @Component({
   selector: 'app-navbar',
@@ -15,7 +16,7 @@ import { AuthService } from '../../core/services/auth.service';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   menuItems: MenuItem[] = [];
   profileItems: MenuItem[] = [];
 
@@ -25,7 +26,9 @@ export class NavbarComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     const user = this.authService.getUser();
     const email = user?.email ?? 'User';
 
@@ -37,7 +40,7 @@ export class NavbarComponent {
       { label: 'Tasks', routerLink: '/tasks' },
     ];
 
-    if (this.authService.hasRole('ADMIN')) {
+    if (this.authService.hasRole(Role.ADMIN)) {
       this.menuItems.push({
         label: 'Users',
         routerLink: '/users',
