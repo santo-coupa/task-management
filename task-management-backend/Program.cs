@@ -9,10 +9,7 @@ using task_management_backend.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// =======================
 // 1. ADD SERVICES
-// =======================
-
 // Controllers
 builder.Services.AddControllers();
 
@@ -34,10 +31,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// =======================
 // 2. JWT AUTHENTICATION
-// =======================
-
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var jwtKey = jwtSection["Key"];
 
@@ -61,16 +55,10 @@ builder.Services
     };
   });
 
-// =======================
 // 3. BUILD APP
-// =======================
-
 var app = builder.Build();
 
-// =======================
 // 4. MIDDLEWARE PIPELINE
-// =======================
-
 if (app.Environment.IsDevelopment())
 {
   app.UseSwagger();
