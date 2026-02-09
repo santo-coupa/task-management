@@ -1,1 +1,27 @@
-<p>Tasks Pages</p>
+<h2>Tasks</h2>
+
+<p-table
+  [value]="tasks"
+  [paginator]="true"
+  [rows]="5"
+  responsiveLayout="scroll"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Title</th>
+      <th>Status</th>
+      <th *ngIf="isAdmin">Assigned To</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-task>
+    <tr>
+      <td>{{ task.title }}</td>
+      <td>{{ task.status }}</td>
+      <td *ngIf="isAdmin">
+        {{ task.assignedToUserId }}
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
