@@ -1,17 +1,31 @@
-<h2 style="margin-bottom: 1.5rem">Dashboard</h2>
+<h2>Dashboard</h2>
 
-<div class="dashboard-grid">
-  <p-card
-    *ngFor="let stat of stats"
-    class="dashboard-card"
-  >
-    <div class="card-content">
-      <i class="pi" [ngClass]="stat.icon"></i>
+<div class="stats">
+  <div class="card">
+    <h3>Total Tasks</h3>
+    <p>{{ totalTasks }}</p>
+  </div>
 
-      <div>
-        <div class="card-value">{{ stat.value }}</div>
-        <div class="card-title">{{ stat.title }}</div>
-      </div>
-    </div>
-  </p-card>
+  <div class="card">
+    <h3>In Progress</h3>
+    <p>{{ inProgressTasks }}</p>
+  </div>
+
+  <div class="card">
+    <h3>Pending</h3>
+    <p>{{ pendingTasks }}</p>
+  </div>
+
+  <div class="card">
+    <h3>Completed</h3>
+    <p>{{ completedTasks }}</p>
+  </div>
+</div>
+
+<div *ngIf="isAdmin" class="admin-note">
+  <p>You are viewing the Admin dashboard.</p>
+</div>
+
+<div *ngIf="!isAdmin" class="user-note">
+  <p>You are viewing your personal dashboard.</p>
 </div>

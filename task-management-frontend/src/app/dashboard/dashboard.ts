@@ -1,35 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CardModule } from 'primeng/card';
+
+import { TaskService } from '../core/services/task.service';
+import { AuthService } from '../core/services/auth.service';
+import { UserTaskStatus } from '../core/models/task-status.enum';
+import { Role } from '../core/models/role.enum';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, CardModule],
+  imports: [CommonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
-export class DashboardComponent {
-  stats = [
-    {
-      title: 'Total Tasks',
-      value: 42,
-      icon: 'pi pi-list',
-    },
-    {
-      title: 'Completed Tasks',
-      value: 28,
-      icon: 'pi pi-check-circle',
-    },
-    {
-      title: 'Pending Tasks',
-      value: 14,
-      icon: 'pi pi-clock',
-    },
-    {
-      title: 'Users',
-      value: 5,
-      icon: 'pi pi-users',
-    },
-  ];
+export class DashboardComponent implements OnInit {
+  totalTasks = 0;
+  pendingTasks = 0;
+  cancelledTasks = 0;
+  inProgressTasks = 0;
+  completedTasks = 0;
+
+  isAdmin = false;
+
+  constructor(
+    private taskService: TaskService,
+    private authService: AuthService,
+  ) {}
+
+  ngOnInit(): void {
+    this.isAdmin = this.authService.hasRole(Role.ADMIN);
+    this.totalTasks = this.taskService.getTotalTaskCount();
+    this.inProgressTasks = this.taskService.getTaskCountByStatus(UserTaskStatus.inprogress);
+    this.cancelledTasks = this.taskService.getTaskCountByStatus(UserTaskStatus.cancelled);
+    this.completedTasks = this.taskService.getTaskCountByStatus(UserTaskStatus.completed);
+    this.pendingTasks = this.taskService.getTaskCountByStatus(UserTaskStatus.pending);
+
+  }
 }

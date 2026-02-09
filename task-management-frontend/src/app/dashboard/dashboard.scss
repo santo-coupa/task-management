@@ -1,29 +1,33 @@
-.dashboard-grid {
+.stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
 }
 
-.dashboard-card {
-  cursor: default;
+.card {
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+
+  background: var(--surface-card);
+  color: var(--text-color);
+
+  box-shadow: var(--card-shadow);
 }
 
-.card-content {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+.card h3 {
+  margin-bottom: 8px;
+  color: var(--text-color-secondary);
 }
 
-.card-content i {
-  font-size: 2rem;
-  color: #3b82f6;
+.card p {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
 }
 
-.card-value {
-  font-size: 1.75rem;
-  font-weight: bold;
-}
-
-.card-title {
-  color: #666;
+.admin-note,
+.user-note {
+  margin-top: 20px;
+  color: var(--text-color-secondary);
 }
