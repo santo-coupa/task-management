@@ -4,12 +4,13 @@ using task_management_backend;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using task_management_backend.Middleware;
 using task_management_backend.Services;
 using task_management_backend.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. ADD SERVICES
+// ADD SERVICES
 // Controllers
 builder.Services.AddControllers();
 
@@ -31,7 +32,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 2. JWT AUTHENTICATION
+// JWT AUTHENTICATION
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var jwtKey = jwtSection["Key"];
 
@@ -55,10 +56,13 @@ builder.Services
     };
   });
 
-// 3. BUILD APP
+// BUILD APP
 var app = builder.Build();
 
-// 4. MIDDLEWARE PIPELINE
+// Registering Middleware
+app.UseMiddleware<ExceptionMiddleware>();
+
+// MIDDLEWARE PIPELINE
 if (app.Environment.IsDevelopment())
 {
   app.UseSwagger();

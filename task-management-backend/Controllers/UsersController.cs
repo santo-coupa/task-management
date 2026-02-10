@@ -27,14 +27,7 @@ public class UsersController : ControllerBase
   public ActionResult<GetUserResponse> Create(
     [FromBody] CreateUserRequest request)
   {
-    try
-    {
-      var user = UserService.CreateUser(request);
-      return user.Adapt<GetUserResponse>();
-    }
-    catch (ArgumentException ex)
-    {
-      return BadRequest(ex.Message);
-    }
+    var user = UserService.CreateUser(request);
+    return user.Adapt<GetUserResponse>();
   }
 }

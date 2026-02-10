@@ -19,14 +19,7 @@ public class AuthController : ControllerBase
   public ActionResult<AuthenticateResponse> Authenticate(
     [FromBody] AuthenticateRequest request)
   {
-    try
-    {
-      var response = AuthService.Authenticate(request);
-      return Ok(response);
-    }
-    catch (ArgumentException ex)
-    {
-      return BadRequest(ex.Message);
-    }
+    var response = AuthService.Authenticate(request);
+    return Ok(response);
   }
 }
