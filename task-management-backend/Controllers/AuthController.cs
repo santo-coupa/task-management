@@ -1,5 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using task_management_backend.Attributes;
 using task_management_backend.Dto.Auth;
 using task_management_backend.Services.Interfaces;
 

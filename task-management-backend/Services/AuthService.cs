@@ -77,28 +77,4 @@ public class AuthService : IAuthService
             Email = user.Email
         };
     }
-
-    public void ValidateToken(string token)
-    {
-      try
-      {
-        var key = new SymmetricSecurityKey(
-          Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]!)
-        );
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        tokenHandler.ValidateToken(token, new TokenValidationParameters
-        {
-          ValidateIssuerSigningKey = true,
-          IssuerSigningKey = key,
-          ValidateIssuer = false,
-          ValidateAudience = false,
-          ClockSkew = TimeSpan.Zero,
-        }, out _);
-      }
-      catch
-      {
-        throw new UnauthorizedAccessException("Invalid or malformed JWT token");
-      }
-    }
 }
