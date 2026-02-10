@@ -1,6 +1,7 @@
-namespace task_management_backend.Middleware;
 using System.Net;
 using System.Text.Json;
+
+namespace task_management_backend.Middleware;
 
 public class ExceptionMiddleware
 {
@@ -17,25 +18,30 @@ public class ExceptionMiddleware
     {
       await _next(context);
     }
+    catch (UnauthorizedAccessException ex)
+    {
+      context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+      context.Response.ContentType = "application/json";
+
+      var response = new
+      {
+        error = "Unauthorized",
+        message = ex.Message
+      };
+
+      await context.Response.WriteAsync(
+        JsonSerializer.Serialize(response)
+      );
+    }
     catch (ArgumentException ex)
     {
-      await HandleException(context, HttpStatusCode.BadRequest, ex.Message);
+      context.Response.StatusCode = StatusCodes.Status400BadRequest;
+      await context.Response.WriteAsync(ex.Message);
     }
-    catch (Exception ex)
+    catch (Exception)
     {
-      await HandleException(context, HttpStatusCode.InternalServerError, "An unexpected error occured");
+      context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+      await context.Response.WriteAsync("Internal server error");
     }
-  }
-
-  private static async Task HandleException(HttpContext context, HttpStatusCode statusCode, string errorMessage)
-  {
-    context.Response.ContentType = "application/json";
-    context.Response.StatusCode = (int)statusCode;
-
-    var response = new
-    {
-      error = errorMessage
-    };
-    await context.Response.WriteAsync(JsonSerializer.Serialize(response));
   }
 }

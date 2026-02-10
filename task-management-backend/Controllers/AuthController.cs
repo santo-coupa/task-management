@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using task_management_backend.Attributes;
 using task_management_backend.Dto.Auth;
 using task_management_backend.Services.Interfaces;
 
@@ -16,6 +17,7 @@ public class AuthController : ControllerBase
   }
 
   [HttpPost("authenticate")]
+  [AllowAnonymous]
   public ActionResult<AuthenticateResponse> Authenticate(
     [FromBody] AuthenticateRequest request)
   {
