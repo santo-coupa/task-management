@@ -1,8 +1,14 @@
-:host {
-  display: block;
+.table-controls {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
-h2 {
-  margin-bottom: 16px;
-  color: var(--text-color);
+:host ::ng-deep .p-table {
+  border-radius: 8px;
+}
+
+:host ::ng-deep .p-paginator {
+  margin-top: 12px;
 }
