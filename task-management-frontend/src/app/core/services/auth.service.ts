@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthResponse } from '../models/auth-response.model';
 import { tap } from 'rxjs';
+import { Role } from '../models/role.enum';
 
 const STORAGE_KEY = 'auth_user';
 
@@ -61,7 +62,7 @@ export class AuthService {
     return this.token;
   }
 
-  hasRole(role: string): boolean {
+  hasRole(role: Role): boolean {
     return this.user?.role === role;
   }
 

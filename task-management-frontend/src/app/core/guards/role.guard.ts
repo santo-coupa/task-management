@@ -16,6 +16,8 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot): boolean
   if (!allowedRoles || allowedRoles.length === 0) {
     return true;
   }
+  console.log('User role:', auth.getUser()?.role);
+  console.log('Allowed roles:', allowedRoles);
 
   const hasAccess = allowedRoles.some((role) => auth.hasRole(role));
 
