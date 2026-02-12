@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
-import { Role } from '../models/role.enum';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { AuthResponse } from '../models/auth-response.model';
+import { tap } from 'rxjs';
 
 const STORAGE_KEY = 'auth_user';
 
@@ -8,55 +11,72 @@ const STORAGE_KEY = 'auth_user';
   providedIn: 'root',
 })
 export class AuthService {
+  private token: string | null = null;
   private user: User | null = null;
 
-  constructor() {
-    this.restoreUser();
+  private readonly API_URL = 'http://localhost:5017/auth/authenticate';
+
+  constructor(private http: HttpClient) {
+    this.restoreSession();
   }
 
-  login(email: string, password: string): boolean {
-    this.user = {
-      id: '1',
-      email,
-      role: email.includes('admin') ? Role.ADMIN : Role.USER,
-    };
+  login(username: string, password: string): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(this.API_URL, {
+        username,
+        password,
+      })
+      .pipe(
+        tap((response: AuthResponse) => {
+          this.token = response.token;
 
-    this.persistUser();
-    return true;
+          this.user = {
+            id: response.username,
+            email: response.email,
+            role: response.role,
+          };
+
+          localStorage.setItem('auth_token', this.token);
+          localStorage.setItem('auth_user', JSON.stringify(this.user));
+        }),
+      );
   }
 
   logout(): void {
+    this.token = null;
     this.user = null;
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
   }
 
   isAuthenticated(): boolean {
-    return this.user !== null;
+    return !!this.token;
   }
 
   getUser(): User | null {
     return this.user;
   }
 
-  hasRole(role: Role): boolean {
+  getToken(): string | null {
+    return this.token;
+  }
+
+  hasRole(role: string): boolean {
     return this.user?.role === role;
   }
 
-  updateUser(updatedUser : User){
+  updateUser(updatedUser: User): void {
     this.user = updatedUser;
-    this.persistUser();
+    localStorage.setItem('auth_user', JSON.stringify(updatedUser));
   }
 
-  private persistUser(): void {
-    if (this.user) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.user));
-    }
-  }
+  private restoreSession(): void {
+    const storedToken = localStorage.getItem('auth_token');
+    const storedUser = localStorage.getItem('auth_user');
 
-  private restoreUser(): void {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      this.user = JSON.parse(stored);
+    if (storedToken && storedUser) {
+      this.token = storedToken;
+      this.user = JSON.parse(storedUser);
     }
   }
 }

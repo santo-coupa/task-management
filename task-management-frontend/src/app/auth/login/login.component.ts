@@ -10,20 +10,12 @@ import { AuthService } from '../../core/services/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    InputTextModule,
-    PasswordModule,
-    ButtonModule,
-  ],
+  imports: [CommonModule, FormsModule, InputTextModule, PasswordModule, ButtonModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
 })
-
-
 export class LoginComponent {
-  email = '';
+  username = '';
   password = '';
 
   constructor(
@@ -32,10 +24,14 @@ export class LoginComponent {
   ) {}
 
   login(): void {
-    const success = this.authService.login(this.email, this.password);
-
-    if (success) {
-      this.router.navigate(['/dashboard']);
-    }
+    this.authService.login(this.username, this.password).subscribe({
+      next: () => {
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        console.error('Login failed', err);
+        alert('Invalid credentials');
+      },
+    });
   }
 }
