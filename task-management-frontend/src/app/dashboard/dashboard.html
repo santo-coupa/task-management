@@ -1,31 +1,37 @@
 <h2>Dashboard</h2>
 
-<div class="stats">
-  <div class="card">
-    <h3>Total Tasks</h3>
-    <p>{{ totalTasks }}</p>
+@if (vm$ | async; as vm) {
+
+  <div class="stats">
+    <div class="card">
+      <h3>Total Tasks</h3>
+      <p>{{ vm.totalTasks }}</p>
+    </div>
+
+    <div class="card">
+      <h3>In Progress</h3>
+      <p>{{ vm.inProgressTasks }}</p>
+    </div>
+
+    <div class="card">
+      <h3>Pending</h3>
+      <p>{{ vm.pendingTasks }}</p>
+    </div>
+
+    <div class="card">
+      <h3>Completed</h3>
+      <p>{{ vm.completedTasks }}</p>
+    </div>
   </div>
 
-  <div class="card">
-    <h3>In Progress</h3>
-    <p>{{ inProgressTasks }}</p>
-  </div>
+  @if (vm.isAdmin) {
+    <div class="admin-note">
+      <p>You are viewing the Admin dashboard.</p>
+    </div>
+  } @else {
+    <div class="user-note">
+      <p>You are viewing your personal dashboard.</p>
+    </div>
+  }
 
-  <div class="card">
-    <h3>Pending</h3>
-    <p>{{ pendingTasks }}</p>
-  </div>
-
-  <div class="card">
-    <h3>Completed</h3>
-    <p>{{ completedTasks }}</p>
-  </div>
-</div>
-
-<div *ngIf="isAdmin" class="admin-note">
-  <p>You are viewing the Admin dashboard.</p>
-</div>
-
-<div *ngIf="!isAdmin" class="user-note">
-  <p>You are viewing your personal dashboard.</p>
-</div>
+}

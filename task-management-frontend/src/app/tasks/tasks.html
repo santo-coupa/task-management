@@ -1,13 +1,15 @@
 <h2>Task List</h2>
 
 <div class="table-controls">
+  <!-- Global Search -->
   <input
     type="text"
     pInputText
     placeholder="Search by title..."
-    (input)="dt.filterGlobal($event.target.value, 'contains')"
+    (input)="onGlobalFilter($event)"
   />
 
+  <!-- Status Filter -->
   <p-select
     [options]="statusOptions"
     [(ngModel)]="selectedStatus"
@@ -17,7 +19,15 @@
   </p-select>
 </div>
 
-<p-table #dt [value]="tasks" [paginator]="true" [rows]="5" [globalFilterFields]="['title']">
+<p-table
+  #dt
+  [value]="(tasks$ | async) ?? []"
+  [paginator]="true"
+  [rows]="5"
+  [globalFilterFields]="['title']"
+  responsiveLayout="scroll"
+>
+  <!-- Header -->
   <ng-template pTemplate="header">
     <tr>
       <th pSortableColumn="title">
@@ -30,19 +40,21 @@
         <p-sortIcon field="status"></p-sortIcon>
       </th>
 
-      <th *ngIf="isAdmin">Assigned User</th>
+      @if (isAdmin$ | async) {
+        <th>Assigned User</th>
+      }
     </tr>
   </ng-template>
 
+  <!-- Body -->
   <ng-template pTemplate="body" let-task>
     <tr>
       <td>{{ task.title }}</td>
-      <td>
-        {{ getStatusLabel(task.status) }}
-      </td>
-      <td *ngIf="isAdmin">
-        {{ task.assignedToUserId }}
-      </td>
+      <td>{{ getStatusLabel(task.status) }}</td>
+
+      @if (isAdmin$ | async) {
+        <td>{{ task.assignedToUserId }}</td>
+      }
     </tr>
   </ng-template>
 </p-table>

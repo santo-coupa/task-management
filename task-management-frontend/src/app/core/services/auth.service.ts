@@ -1,53 +1,56 @@
 import { Injectable } from '@angular/core';
-import { User } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { AuthResponse } from '../models/auth-response.model';
-import { tap } from 'rxjs';
+import { User } from '../models/user.model';
 import { Role } from '../models/role.enum';
-
-const STORAGE_KEY = 'auth_user';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private token: string | null = null;
-  private user: User | null = null;
 
   private readonly API_URL = 'http://localhost:5017/auth/authenticate';
+  private readonly TOKEN_KEY = 'auth_token';
+  private readonly USER_KEY = 'auth_user';
+
+  private token: string | null = null;
+
+  private userSubject = new BehaviorSubject<User | null>(null);
+  user$ = this.userSubject.asObservable();
 
   constructor(private http: HttpClient) {
     this.restoreSession();
   }
 
   login(username: string, password: string): Observable<AuthResponse> {
-    return this.http
-      .post<AuthResponse>(this.API_URL, {
-        username,
-        password,
+    return this.http.post<AuthResponse>(this.API_URL, {
+      username,
+      password,
+    }).pipe(
+      tap((response) => {
+
+        const user: User = {
+          id: response.username,
+          email: response.email,
+          role: response.role,
+        };
+
+        this.token = response.token;
+        this.userSubject.next(user);
+
+        localStorage.setItem(this.TOKEN_KEY, this.token);
+        localStorage.setItem(this.USER_KEY, JSON.stringify(user));
       })
-      .pipe(
-        tap((response: AuthResponse) => {
-          this.token = response.token;
-
-          this.user = {
-            id: response.username,
-            email: response.email,
-            role: response.role,
-          };
-
-          localStorage.setItem('auth_token', this.token);
-          localStorage.setItem('auth_user', JSON.stringify(this.user));
-        }),
-      );
+    );
   }
 
   logout(): void {
     this.token = null;
-    this.user = null;
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('auth_user');
+    this.userSubject.next(null);
+
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.USER_KEY);
   }
 
   isAuthenticated(): boolean {
@@ -55,7 +58,7 @@ export class AuthService {
   }
 
   getUser(): User | null {
-    return this.user;
+    return this.userSubject.value;
   }
 
   getToken(): string | null {
@@ -63,21 +66,21 @@ export class AuthService {
   }
 
   hasRole(role: Role): boolean {
-    return this.user?.role === role;
+    return this.userSubject.value?.role === role;
   }
 
   updateUser(updatedUser: User): void {
-    this.user = updatedUser;
-    localStorage.setItem('auth_user', JSON.stringify(updatedUser));
+    this.userSubject.next(updatedUser);
+    localStorage.setItem(this.USER_KEY, JSON.stringify(updatedUser));
   }
 
   private restoreSession(): void {
-    const storedToken = localStorage.getItem('auth_token');
-    const storedUser = localStorage.getItem('auth_user');
+    const storedToken = localStorage.getItem(this.TOKEN_KEY);
+    const storedUser = localStorage.getItem(this.USER_KEY);
 
     if (storedToken && storedUser) {
       this.token = storedToken;
-      this.user = JSON.parse(storedUser);
+      this.userSubject.next(JSON.parse(storedUser));
     }
   }
 }

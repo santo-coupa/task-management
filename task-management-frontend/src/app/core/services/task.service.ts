@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { UserTask } from '../models/task.model';
 import { UserTaskStatus } from '../models/task-status.enum';
 import { AuthService } from './auth.service';
@@ -35,31 +36,30 @@ const MOCK_TASKS: UserTask[] = [
   providedIn: 'root',
 })
 export class TaskService {
-  constructor(private authService: AuthService) {}
 
-  getTasks(): UserTask[] {
-    const user = this.authService.getUser();
+  private tasksSubject = new BehaviorSubject<UserTask[]>(MOCK_TASKS);
+  private tasks$ = this.tasksSubject.asObservable();
 
-    if (!user) {
-      return [];
-    }
+  userTasks$; // declare first
 
-    if (user.role === Role.ADMIN) {
-      return MOCK_TASKS;
-    }
+  constructor(private authService: AuthService) {
 
-    return MOCK_TASKS.filter(
-      task => task.assignedToUserId === user.id
+    this.userTasks$ = combineLatest([
+      this.tasks$,
+      this.authService.user$
+    ]).pipe(
+      map(([tasks, user]) => {
+
+        if (!user) return [];
+
+        if (user.role === Role.ADMIN) {
+          return tasks;
+        }
+
+        return tasks.filter(
+          task => task.assignedToUserId === user.id
+        );
+      })
     );
-  }
-
-  getTotalTaskCount(): number {
-    return this.getTasks().length;
-  }
-
-  getTaskCountByStatus(status: UserTaskStatus): number {
-    return this.getTasks().filter(
-      task => task.status === status
-    ).length;
   }
 }

@@ -1,26 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
 
 import { TableModule } from 'primeng/table';
 import { SelectModule } from 'primeng/select';
 
-import { UserTask } from '../core/models/task.model';
 import { UserTaskStatus } from '../core/models/task-status.enum';
 import { TaskService } from '../core/services/task.service';
 import { AuthService } from '../core/services/auth.service';
 import { Role } from '../core/models/role.enum';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, SelectModule],
+  imports: [CommonModule, FormsModule, TableModule, SelectModule, AsyncPipe],
   templateUrl: './tasks.html',
   styleUrl: './tasks.scss',
 })
-export class TasksComponent implements OnInit {
-  tasks: UserTask[] = [];
-  isAdmin = false;
+export class TasksComponent {
+onGlobalFilter($event: Event) {
+throw new Error('Method not implemented.');
+}
+
+  tasks$;
+  isAdmin$;
 
   selectedStatus: UserTaskStatus | null = null;
 
@@ -35,11 +40,12 @@ export class TasksComponent implements OnInit {
   constructor(
     private taskService: TaskService,
     private authService: AuthService,
-  ) {}
+  ) {
+    this.tasks$ = this.taskService.userTasks$;
 
-  ngOnInit(): void {
-    this.isAdmin = this.authService.hasRole(Role.ADMIN);
-    this.tasks = this.taskService.getTasks();
+    this.isAdmin$ = this.authService.user$.pipe(
+      map(user => user?.role === Role.ADMIN)
+    );
   }
 
   getStatusLabel(status: UserTaskStatus): string {
