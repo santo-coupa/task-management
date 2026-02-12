@@ -10,6 +10,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers
 builder.Services.AddControllers();
 
+builder.Services.AddCors(options =>
+{
+  options.AddPolicy("AllowFrontend",
+    policy =>
+    {
+      policy.WithOrigins("http://localhost:4200")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
+
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
   options.UseNpgsql(
@@ -30,6 +41,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCors("AllowFrontend");
 
 // Middleware
 app.UseMiddleware<ExceptionMiddleware>();
