@@ -3,6 +3,7 @@ import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 import { DefaultLayoutComponent } from './layout/default-layout/default-layout.component';
 import { Role } from './core/models/role.enum';
+import { ProfileComponent } from './profile/profile';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,10 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         data: {roles : [Role.ADMIN]},
         loadChildren: () => import('./users/users.routes').then((m) => m.usersRoutes),
+      },
+      {
+        path: 'profile',
+        loadChildren: () => import('./profile/profile.routes').then((m) => m.profileRoutes),
       },
     ],
   },

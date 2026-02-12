@@ -8,6 +8,7 @@ import { MenuItem } from 'primeng/api';
 
 import { AuthService } from '../../core/services/auth.service';
 import { Role } from '../../core/models/role.enum';
+import { User } from '../../core/models/user.model';
 
 @Component({
   selector: 'app-navbar',
@@ -17,11 +18,14 @@ import { Role } from '../../core/models/role.enum';
   styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent implements OnInit {
+
   menuItems: MenuItem[] = [];
   profileItems: MenuItem[] = [];
 
   displayName = '';
   userInitial = '';
+
+  private currentUser: User | null = null;
 
   constructor(
     private authService: AuthService,
@@ -29,23 +33,32 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const user = this.authService.getUser();
-    const email = user?.email ?? 'User';
+    this.currentUser = this.authService.getUser();
 
+    const email = this.currentUser?.email ?? 'User';
     this.displayName = email.split('@')[0];
     this.userInitial = this.displayName.charAt(0).toUpperCase();
 
+    this.buildMenu();
+    this.buildProfileMenu();
+  }
+
+  private buildMenu(): void {
     this.menuItems = [
       { label: 'Dashboard', routerLink: '/dashboard' },
       { label: 'Tasks', routerLink: '/tasks' },
     ];
 
-    if (this.authService.hasRole(Role.ADMIN)) {
+    if (this.currentUser?.role === Role.ADMIN) {
       this.menuItems.push({
         label: 'Users',
         routerLink: '/users',
       });
     }
+  }
+
+  private buildProfileMenu(): void {
+    const email = this.currentUser?.email ?? 'User';
 
     this.profileItems = [
       {
@@ -53,6 +66,11 @@ export class NavbarComponent implements OnInit {
         disabled: true,
       },
       { separator: true },
+      {
+        label: 'My Profile',
+        icon: 'pi pi-user',
+        command: () => this.router.navigate(['/profile']),
+      },
       {
         label: 'Logout',
         icon: 'pi pi-sign-out',

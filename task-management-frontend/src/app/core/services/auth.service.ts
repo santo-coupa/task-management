@@ -42,6 +42,11 @@ export class AuthService {
     return this.user?.role === role;
   }
 
+  updateUser(updatedUser : User){
+    this.user = updatedUser;
+    this.persistUser();
+  }
+
   private persistUser(): void {
     if (this.user) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.user));

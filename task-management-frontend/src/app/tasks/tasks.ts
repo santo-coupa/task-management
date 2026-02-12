@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { SelectModule } from 'primeng/select';
 
-import { UserTask} from '../core/models/task.model';
+import { UserTask } from '../core/models/task.model';
 import { UserTaskStatus } from '../core/models/task-status.enum';
 import { TaskService } from '../core/services/task.service';
 import { AuthService } from '../core/services/auth.service';
@@ -14,12 +14,7 @@ import { Role } from '../core/models/role.enum';
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    TableModule,
-    SelectModule,
-  ],
+  imports: [CommonModule, FormsModule, TableModule, SelectModule],
   templateUrl: './tasks.html',
   styleUrl: './tasks.scss',
 })

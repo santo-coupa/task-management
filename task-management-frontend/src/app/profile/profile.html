@@ -1,0 +1,27 @@
+<p-card header="My Profile">
+
+  <div class="field">
+    <label>Email</label>
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="editableEmail"
+    />
+  </div>
+
+  <div class="buttons">
+    <button
+      pButton
+      label="Save Changes"
+      (click)="save()"
+    ></button>
+
+    <button
+      pButton
+      label="Reset Password"
+      severity="secondary"
+      (click)="resetPassword()"
+    ></button>
+  </div>
+
+</p-card>
