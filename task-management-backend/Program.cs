@@ -4,6 +4,8 @@ using task_management_backend;
 using task_management_backend.Middleware;
 using task_management_backend.Services;
 using task_management_backend.Services.Interfaces;
+using task_management_backend.Database;
+using task_management_backend.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,5 +58,30 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
+
+
+//if there's no user, this is for testing
+using (var scope = app.Services.CreateScope())
+{
+  var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+  db.Database.EnsureCreated();
+
+  if (!db.Users.Any())
+  {
+    var adminUser = new User
+    {
+      Id = Guid.CreateVersion7(),
+      Username = "admin",
+      Email = "admin@test.com",
+      PasswordHashed = BCrypt.Net.BCrypt.HashPassword("admin123"),
+      Role = UserRole.Admin
+    };
+
+    db.Users.Add(adminUser);
+    db.SaveChanges();
+  }
+}
+
 
 app.Run();
