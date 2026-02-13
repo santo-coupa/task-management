@@ -1,5 +1,6 @@
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
+using task_management_backend.Attributes;
 using task_management_backend.Dto.Tasks;
 using task_management_backend.Services.Interfaces;
 
@@ -7,6 +8,7 @@ namespace task_management_backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class TasksController : ControllerBase
 {
   private readonly ITaskService TaskService;

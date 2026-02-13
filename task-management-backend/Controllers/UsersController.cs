@@ -1,5 +1,6 @@
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
+using task_management_backend.Attributes;
 using task_management_backend.Dto;
 using task_management_backend.Services.Interfaces;
 
@@ -7,6 +8,7 @@ namespace task_management_backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class UsersController : ControllerBase
 {
   private readonly IUserService UserService;
@@ -27,14 +29,7 @@ public class UsersController : ControllerBase
   public ActionResult<GetUserResponse> Create(
     [FromBody] CreateUserRequest request)
   {
-    try
-    {
-      var user = UserService.CreateUser(request);
-      return user.Adapt<GetUserResponse>();
-    }
-    catch (ArgumentException ex)
-    {
-      return BadRequest(ex.Message);
-    }
+    var user = UserService.CreateUser(request);
+    return user.Adapt<GetUserResponse>();
   }
 }

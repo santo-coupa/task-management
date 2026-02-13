@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using task_management_backend.Attributes;
 using task_management_backend.Dto.Auth;
 using task_management_backend.Services.Interfaces;
 
@@ -16,17 +17,11 @@ public class AuthController : ControllerBase
   }
 
   [HttpPost("authenticate")]
+  [AllowAnonymous]
   public ActionResult<AuthenticateResponse> Authenticate(
     [FromBody] AuthenticateRequest request)
   {
-    try
-    {
-      var response = AuthService.Authenticate(request);
-      return Ok(response);
-    }
-    catch (ArgumentException ex)
-    {
-      return BadRequest(ex.Message);
-    }
+    var response = AuthService.Authenticate(request);
+    return Ok(response);
   }
 }

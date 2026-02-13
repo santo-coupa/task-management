@@ -45,7 +45,8 @@ public class AuthService : IAuthService
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Email, user.Email)
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.Role.ToString())
         };
 
         var key = new SymmetricSecurityKey(
@@ -74,7 +75,32 @@ public class AuthService : IAuthService
         {
             Token = tokenString,
             Username = user.Username,
-            Email = user.Email
+            Email = user.Email,
+            Role = user.Role
         };
+    }
+
+    public void ValidateToken(string token)
+    {
+      try
+      {
+        var key = new SymmetricSecurityKey(
+          Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]!)
+        );
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        tokenHandler.ValidateToken(token, new TokenValidationParameters
+        {
+          ValidateIssuerSigningKey = true,
+          IssuerSigningKey = key,
+          ValidateIssuer = false,
+          ValidateAudience = false,
+          ClockSkew = TimeSpan.Zero,
+        }, out _);
+      }
+      catch
+      {
+        throw new UnauthorizedAccessException("Invalid or malformed JWT token");
+      }
     }
 }
