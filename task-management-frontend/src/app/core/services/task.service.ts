@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, map } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+
 import { UserTask } from '../models/task.model';
 import { UserTaskStatus } from '../models/task-status.enum';
 import { AuthService } from './auth.service';
@@ -36,30 +37,24 @@ const MOCK_TASKS: UserTask[] = [
   providedIn: 'root',
 })
 export class TaskService {
+  private authService = inject(AuthService);
 
   private tasksSubject = new BehaviorSubject<UserTask[]>(MOCK_TASKS);
-  private tasks$ = this.tasksSubject.asObservable();
 
-  userTasks$; // declare first
+  readonly tasks$ = this.tasksSubject.asObservable();
 
-  constructor(private authService: AuthService) {
+  readonly userTasks$: Observable<UserTask[]> = combineLatest([
+    this.tasks$,
+    this.authService.user$,
+  ]).pipe(
+    map(([tasks, user]) => {
+      if (!user) return [];
 
-    this.userTasks$ = combineLatest([
-      this.tasks$,
-      this.authService.user$
-    ]).pipe(
-      map(([tasks, user]) => {
+      if (user.role === Role.ADMIN) {
+        return tasks;
+      }
 
-        if (!user) return [];
-
-        if (user.role === Role.ADMIN) {
-          return tasks;
-        }
-
-        return tasks.filter(
-          task => task.assignedToUserId === user.id
-        );
-      })
-    );
-  }
+      return tasks.filter((task) => task.assignedToUserId === user.id);
+    }),
+  );
 }

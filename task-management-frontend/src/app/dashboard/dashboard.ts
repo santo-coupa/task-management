@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardUiService } from './dashboard-ui.service';
+import { DashboardUiService, DashboardVm } from './dashboard-ui.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,9 +11,8 @@ import { DashboardUiService } from './dashboard-ui.service';
   styleUrl: './dashboard.scss',
 })
 export class DashboardComponent {
-  vm$;
 
-  constructor(private uiService: DashboardUiService) {
-    this.vm$ = this.uiService.vm$;
-  }
+  private uiService = inject(DashboardUiService);
+
+  vm$: Observable<DashboardVm> = this.uiService.vm$;
 }

@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { CommonModule, AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AsyncPipe } from '@angular/common';
+import { map, Observable } from 'rxjs';
 
 import { TableModule } from 'primeng/table';
 import { SelectModule } from 'primeng/select';
 
+import { UserTask } from '../core/models/task.model';
 import { UserTaskStatus } from '../core/models/task-status.enum';
 import { TaskService } from '../core/services/task.service';
 import { AuthService } from '../core/services/auth.service';
 import { Role } from '../core/models/role.enum';
-import { map } from 'rxjs';
 
 @Component({
   selector: 'app-tasks',
@@ -20,33 +20,26 @@ import { map } from 'rxjs';
   styleUrl: './tasks.scss',
 })
 export class TasksComponent {
-onGlobalFilter($event: Event) {
-throw new Error('Method not implemented.');
-}
 
-  tasks$;
-  isAdmin$;
+  private taskService = inject(TaskService);
+  private authService = inject(AuthService);
+
+  readonly tasks$: Observable<UserTask[]> = this.taskService.userTasks$;
+
+  readonly isAdmin$: Observable<boolean> =
+    this.authService.user$.pipe(
+      map(user => user?.role === Role.ADMIN)
+    );
 
   selectedStatus: UserTaskStatus | null = null;
 
-  statusOptions = [
+  readonly statusOptions = [
     { label: 'All', value: null },
     { label: 'Pending', value: UserTaskStatus.pending },
     { label: 'In Progress', value: UserTaskStatus.inprogress },
     { label: 'Completed', value: UserTaskStatus.completed },
     { label: 'Cancelled', value: UserTaskStatus.cancelled },
   ];
-
-  constructor(
-    private taskService: TaskService,
-    private authService: AuthService,
-  ) {
-    this.tasks$ = this.taskService.userTasks$;
-
-    this.isAdmin$ = this.authService.user$.pipe(
-      map(user => user?.role === Role.ADMIN)
-    );
-  }
 
   getStatusLabel(status: UserTaskStatus): string {
     return UserTaskStatus[status];

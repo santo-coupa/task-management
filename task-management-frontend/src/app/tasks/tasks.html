@@ -1,15 +1,13 @@
 <h2>Task List</h2>
 
 <div class="table-controls">
-  <!-- Global Search -->
   <input
     type="text"
     pInputText
     placeholder="Search by title..."
-    (input)="onGlobalFilter($event)"
+    (input)="dt.filterGlobal($any($event.target).value, 'contains')"
   />
 
-  <!-- Status Filter -->
   <p-select
     [options]="statusOptions"
     [(ngModel)]="selectedStatus"
@@ -27,7 +25,6 @@
   [globalFilterFields]="['title']"
   responsiveLayout="scroll"
 >
-  <!-- Header -->
   <ng-template pTemplate="header">
     <tr>
       <th pSortableColumn="title">
@@ -46,7 +43,6 @@
     </tr>
   </ng-template>
 
-  <!-- Body -->
   <ng-template pTemplate="body" let-task>
     <tr>
       <td>{{ task.title }}</td>
