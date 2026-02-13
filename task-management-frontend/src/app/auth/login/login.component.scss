@@ -1,38 +1,37 @@
-.login-container {
+.login-wrapper {
   height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  background: #f5f7fb;
+  justify-content: center;
+  background: var(--surface-ground);
 }
-
 
 .login-card {
-  width: 360px;
-  padding: 1.5rem;
+  width: 400px;
 }
-
 
 .field {
+  margin-bottom: 1.2rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.25rem;
 }
-
 
 label {
+  margin-bottom: 6px;
   font-weight: 500;
-  color: #333;
 }
 
-
-input,
-p-password {
-  width: 100%;
+.error {
+  color: #f44336;
+  font-size: 0.75rem;
+  margin-top: 4px;
 }
 
-
-button {
-  width: 100%;
+.server-error {
+  background: #ffebee;
+  color: #c62828;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
 }
