@@ -1,8 +1,16 @@
+using task_management_backend.Enums;
+
 namespace task_management_backend.Dto.Tasks;
 
 public class UpdateTaskRequest
 {
-  public string? Title { get; set; } = null!;
-  public Enums.UserTaskStatus? Status { get; set; }
-  public Guid? AssignedUserId { get; set; }
+  public string? Name { get; set; }
+
+  public string? Description { get; set; }
+
+  public UserTaskStatus? Status { get; set; }
+
+  public Guid? AssigneeId { get; set; }
+
+  public DateTime? DueDate { get; set; }
 }

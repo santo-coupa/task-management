@@ -6,9 +6,24 @@ using task_management_backend.Enums;
 public class UserTask
 {
   public Guid Id { get; set; }
-  public string Title { get; set; } = string.Empty;
-  public UserTaskStatus Status { get; set; }
 
-  public Guid AssignedUserId { get; set; }
-  public User AssignedUser { get; set; } = null!;
+  public string Name { get; set; } = string.Empty;
+
+  public string? Description { get; set; }
+
+  public UserTaskStatus Status { get; set; } = UserTaskStatus.toDo;
+
+  public Guid? AssigneeId { get; set; }
+
+  public User? Assignee { get; set; }
+
+  public Guid CreatedById { get; set; }
+
+  public User CreatedBy { get; set; } = null!;
+
+  public DateTime CreatedAt { get; set; }
+
+  public DateTime? UpdatedAt { get; set; }
+
+  public DateTime? DueDate { get; set; }
 }
