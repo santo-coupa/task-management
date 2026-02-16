@@ -10,4 +10,5 @@ public interface IUserService
   User CreateUser(CreateUserRequest request);
   User UpdateUser(Guid id, UpdateUserRequest request);
   void DeleteUser(Guid id);
+  User GetUserById(Guid id);
 }

@@ -43,6 +43,7 @@ public class UsersController : ControllerBase
     return Ok(user.Adapt<GetUserResponse>());
   }
 
+  [CanOnlyBePerformedByAdmin]
   [HttpDelete("{id:guid}", Name = "DeleteUser")]
   public IActionResult Delete(Guid id)
   {

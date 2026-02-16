@@ -100,4 +100,13 @@ public class UserService : IUserService
     DbContext.SaveChanges();
   }
 
+  public User GetUserById(Guid id)
+  {
+    var user = DbContext.Users.FirstOrDefault(u => u.Id == id);
+
+    if (user == null)
+      throw new ArgumentException("User not found");
+
+    return user;
+  }
 }
