@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { combineLatest, map, Observable } from 'rxjs';
+
 import { TaskService } from '../core/services/task.service';
 import { AuthService } from '../core/services/auth.service';
 import { UserTaskStatus } from '../core/models/task-status.enum';
@@ -23,7 +24,7 @@ export class DashboardUiService {
   private authService = inject(AuthService);
 
   readonly vm$: Observable<DashboardVm> = combineLatest([
-    this.taskService.getTasks(),
+    this.taskService.tasks$,
     this.authService.user$
   ]).pipe(
     map(([tasks, user]) => ({

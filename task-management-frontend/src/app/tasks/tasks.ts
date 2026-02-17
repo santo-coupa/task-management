@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { map, Observable } from 'rxjs';
@@ -24,17 +24,17 @@ import { Role } from '../core/models/role.enum';
     TableModule,
     SelectModule,
     ButtonModule,
-    CardModule 
+    CardModule
   ],
   templateUrl: './tasks.html',
   styleUrl: './tasks.scss',
 })
-export class TasksComponent {
+export class TasksComponent implements OnInit {
 
   private taskService = inject(TaskService);
   private authService = inject(AuthService);
 
-  readonly tasks$ = this.taskService.getTasks();
+  readonly tasks$ = this.taskService.tasks$;
 
   readonly isAdmin$: Observable<boolean> =
     this.authService.user$.pipe(
@@ -50,6 +50,10 @@ export class TasksComponent {
     { label: 'Completed', value: UserTaskStatus.completed },
     { label: 'Cancelled', value: UserTaskStatus.cancelled },
   ];
+
+  ngOnInit(): void {
+    this.taskService.loadTasks();
+  }
 
   getStatusLabel(status: UserTaskStatus): string {
     return UserTaskStatus[status];
