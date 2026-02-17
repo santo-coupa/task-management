@@ -1,60 +1,31 @@
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
 
+import { TaskResponse } from '../models/task-response.model';
 import { UserTask } from '../models/task.model';
 import { UserTaskStatus } from '../models/task-status.enum';
-import { AuthService } from './auth.service';
-import { Role } from '../models/role.enum';
-
-const MOCK_TASKS: UserTask[] = [
-  {
-    id: 't1',
-    title: 'Design login UI',
-    status: UserTaskStatus.cancelled,
-    assignedToUserId: '1',
-  },
-  {
-    id: 't2',
-    title: 'Implement role guard',
-    status: UserTaskStatus.completed,
-    assignedToUserId: '1',
-  },
-  {
-    id: 't3',
-    title: 'Review dashboard PR',
-    status: UserTaskStatus.inprogress,
-    assignedToUserId: '2',
-  },
-  {
-    id: 't4',
-    title: 'Create task list UI',
-    status: UserTaskStatus.pending,
-    assignedToUserId: '2',
-  },
-];
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskService {
-  private authService = inject(AuthService);
 
-  private tasksSubject = new BehaviorSubject<UserTask[]>(MOCK_TASKS);
+  private http = inject(HttpClient);
 
-  readonly tasks$ = this.tasksSubject.asObservable();
+  private readonly API_URL = 'http://localhost:5017/tasks';
 
-  readonly userTasks$: Observable<UserTask[]> = combineLatest([
-    this.tasks$,
-    this.authService.user$,
-  ]).pipe(
-    map(([tasks, user]) => {
-      if (!user) return [];
+  getTasks(): Observable<UserTask[]> {
 
-      if (user.role === Role.ADMIN) {
-        return tasks;
-      }
-
-      return tasks.filter((task) => task.assignedToUserId === user.id);
-    }),
-  );
+    return this.http.get<TaskResponse[]>(this.API_URL).pipe(
+      map((tasks) =>
+        tasks.map(task => ({
+          id: task.id,
+          title: task.name,
+          status: task.status as UserTaskStatus,
+          assignedToUserId: task.assigneeId ?? ''
+        }))
+      )
+    );
+  }
 }

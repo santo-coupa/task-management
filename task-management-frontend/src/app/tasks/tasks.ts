@@ -34,7 +34,7 @@ export class TasksComponent {
   private taskService = inject(TaskService);
   private authService = inject(AuthService);
 
-  readonly tasks$: Observable<UserTask[]> = this.taskService.userTasks$;
+  readonly tasks$ = this.taskService.getTasks();
 
   readonly isAdmin$: Observable<boolean> =
     this.authService.user$.pipe(

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { combineLatest, map, Observable } from 'rxjs';
 import { TaskService } from '../core/services/task.service';
 import { AuthService } from '../core/services/auth.service';
@@ -19,25 +19,20 @@ export interface DashboardVm {
 })
 export class DashboardUiService {
 
-  vm$: Observable<DashboardVm>;
+  private taskService = inject(TaskService);
+  private authService = inject(AuthService);
 
-  constructor(
-    private taskService: TaskService,
-    private authService: AuthService
-  ) {
-
-    this.vm$ = combineLatest([
-      this.taskService.userTasks$,
-      this.authService.user$
-    ]).pipe(
-      map(([tasks, user]) => ({
-        totalTasks: tasks.length,
-        pendingTasks: tasks.filter(t => t.status === UserTaskStatus.pending).length,
-        cancelledTasks: tasks.filter(t => t.status === UserTaskStatus.cancelled).length,
-        inProgressTasks: tasks.filter(t => t.status === UserTaskStatus.inprogress).length,
-        completedTasks: tasks.filter(t => t.status === UserTaskStatus.completed).length,
-        isAdmin: user?.role === Role.ADMIN
-      }))
-    );
-  }
+  readonly vm$: Observable<DashboardVm> = combineLatest([
+    this.taskService.getTasks(),
+    this.authService.user$
+  ]).pipe(
+    map(([tasks, user]) => ({
+      totalTasks: tasks.length,
+      pendingTasks: tasks.filter(t => t.status === UserTaskStatus.pending).length,
+      cancelledTasks: tasks.filter(t => t.status === UserTaskStatus.cancelled).length,
+      inProgressTasks: tasks.filter(t => t.status === UserTaskStatus.inprogress).length,
+      completedTasks: tasks.filter(t => t.status === UserTaskStatus.completed).length,
+      isAdmin: user?.role === Role.ADMIN
+    }))
+  );
 }
