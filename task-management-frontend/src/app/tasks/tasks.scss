@@ -1,14 +1,66 @@
-.table-controls {
+.tasks-wrapper {
+  padding: 1.5rem;
+}
+
+.tasks-header {
   display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
-:host ::ng-deep .p-table {
-  border-radius: 8px;
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-:host ::ng-deep .p-paginator {
-  margin-top: 12px;
+.status-filter {
+  min-width: 200px;
+}
+
+.status-badge {
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-0 {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-1 {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-2 {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-3 {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.empty {
+  text-align: center;
+  padding: 1rem;
+  color: var(--text-color-secondary);
 }

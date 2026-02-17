@@ -5,6 +5,8 @@ import { map, Observable } from 'rxjs';
 
 import { TableModule } from 'primeng/table';
 import { SelectModule } from 'primeng/select';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
 
 import { UserTask } from '../core/models/task.model';
 import { UserTaskStatus } from '../core/models/task-status.enum';
@@ -15,7 +17,15 @@ import { Role } from '../core/models/role.enum';
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, SelectModule, AsyncPipe],
+  imports: [
+    CommonModule,
+    FormsModule,
+    AsyncPipe,
+    TableModule,
+    SelectModule,
+    ButtonModule,
+    CardModule 
+  ],
   templateUrl: './tasks.html',
   styleUrl: './tasks.scss',
 })
@@ -43,5 +53,18 @@ export class TasksComponent {
 
   getStatusLabel(status: UserTaskStatus): string {
     return UserTaskStatus[status];
+  }
+
+  onGlobalFilter(event: Event, table: any) {
+    const value = (event.target as HTMLInputElement).value;
+    table.filterGlobal(value, 'contains');
+  }
+
+  onStatusFilter(value: any, table: any) {
+    if (value === null) {
+      table.clear();
+    } else {
+      table.filter(value, 'status', 'equals');
+    }
   }
 }
