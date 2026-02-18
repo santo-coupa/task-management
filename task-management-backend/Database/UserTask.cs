@@ -11,7 +11,7 @@ public class UserTask
 
   public string? Description { get; set; }
 
-  public UserTaskStatus Status { get; set; } = UserTaskStatus.toDo;
+  public UserTaskStatus Status { get; set; } = UserTaskStatus.ToDo;
 
   public Guid? AssigneeId { get; set; }
 

@@ -1,8 +1,8 @@
 namespace task_management_backend.Enums;
 public enum UserTaskStatus
 {
-  toDo = 0,
-  inProgress = 1,
-  review = 2,
-  done = 3
+  ToDo = 0,
+  InProgress = 1,
+  Review = 2,
+  Done = 3
 }

@@ -37,7 +37,7 @@ public class TaskService : ITaskService
         Id = Guid.CreateVersion7(),
         Name = request.Name,
         Description = request.Description,
-        Status = UserTaskStatus.toDo,
+        Status = UserTaskStatus.ToDo,
         AssigneeId = request.AssigneeId,
         CreatedById = currentUserId,
         CreatedAt = DateTime.UtcNow,
