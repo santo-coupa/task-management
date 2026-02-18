@@ -1,10 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, map } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
+import { UserTask } from '../models/task.model';
 import { TaskResponse } from '../models/task-response.model';
 import { CreateTaskRequest } from '../models/create-task-request.model';
-import { UserTask } from '../models/task.model';
 import { UserTaskStatus } from '../models/task-status.enum';
 
 @Injectable({
@@ -17,7 +18,6 @@ export class TaskService {
   private readonly API_URL = 'http://localhost:5017/tasks';
 
   private tasksSubject = new BehaviorSubject<UserTask[]>([]);
-
   readonly tasks$ = this.tasksSubject.asObservable();
 
   loadTasks(): void {
@@ -37,12 +37,11 @@ export class TaskService {
       });
   }
 
-  createTask(request: CreateTaskRequest): Observable<void> {
-    return this.http.post<TaskResponse>(this.API_URL, request).pipe(
-      tap(() => {
+  createTask(request: CreateTaskRequest) {
+    return this.http.post(this.API_URL, request).pipe(
+      map(() => {
         this.loadTasks();
-      }),
-      map(() => void 0)
+      })
     );
   }
 }
