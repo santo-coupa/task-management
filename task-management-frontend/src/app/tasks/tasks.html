@@ -1,5 +1,4 @@
 <div class="tasks-wrapper">
-
   <div class="tasks-header">
     <h2>Tasks</h2>
 
@@ -9,25 +8,22 @@
       label="New Task"
       icon="pi pi-plus"
       class="p-button-sm"
-      (click)="showDialog = true"
+      (click)="openCreateTask()"
     ></button>
   </div>
 
   <p-card>
-
     <p-table
       #dt
       [value]="(tasks$ | async) ?? []"
       [paginator]="true"
       [rows]="8"
       [rowsPerPageOptions]="[5, 8, 15]"
-      [globalFilterFields]="['title','status','assignedToUserId']"
+      [globalFilterFields]="['title', 'status', 'assignedToUserId']"
       responsiveLayout="scroll"
     >
-
       <ng-template pTemplate="caption">
         <div class="table-toolbar">
-
           <span class="search-box">
             <i class="pi pi-search"></i>
             <input
@@ -46,7 +42,6 @@
             (onChange)="onStatusFilter($event.value, dt)"
           >
           </p-select>
-
         </div>
       </ng-template>
 
@@ -69,13 +64,12 @@
             </th>
           }
 
-          <th style="width:120px">Actions</th>
+          <th style="width: 120px">Actions</th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-task>
         <tr>
-
           <td>{{ task.title }}</td>
 
           <td>
@@ -89,7 +83,6 @@
           }
 
           <td class="actions">
-
             <button
               pButton
               icon="pi pi-pencil"
@@ -100,26 +93,20 @@
               pButton
               icon="pi pi-trash"
               class="p-button-rounded p-button-text p-button-danger p-button-sm"
+              (click)="deleteTask(task.id)"
             ></button>
-
           </td>
-
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="4" class="empty">
-            No tasks found.
-          </td>
+          <td colspan="4" class="empty">No tasks found.</td>
         </tr>
       </ng-template>
-
     </p-table>
-
   </p-card>
 </div>
-
 
 <p-dialog
   header="Create Task"
@@ -129,9 +116,7 @@
   [draggable]="false"
   [resizable]="false"
 >
-
   <form [formGroup]="taskForm" class="task-form">
-
     <div class="field">
       <label>Name *</label>
       <input pInputText formControlName="name" />
@@ -172,6 +157,5 @@
         (click)="createTask()"
       ></button>
     </div>
-
   </form>
 </p-dialog>
