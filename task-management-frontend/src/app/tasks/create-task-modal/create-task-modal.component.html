@@ -1,0 +1,23 @@
+<div class="modal-content">
+
+  <div class="field">
+    <label>Name</label>
+    <input pInputText formControlName="name" />
+  </div>
+
+  <div class="field">
+    <label>Description</label>
+    <input pInputText formControlName="description" />
+  </div>
+
+  <div class="field">
+    <label>Due Date</label>
+    <p-datePicker formControlName="dueDate"></p-datePicker>
+  </div>
+
+  <div class="actions">
+    <button pButton label="Cancel" class="p-button-text" (click)="cancel()"></button>
+    <button pButton label="Create" (click)="submit()"></button>
+  </div>
+
+</div>

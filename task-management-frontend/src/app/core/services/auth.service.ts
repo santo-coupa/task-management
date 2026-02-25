@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { AuthResponse } from '../models/auth-response.model';
 import { User } from '../models/user.model';
 import { Role } from '../models/role.enum';
@@ -18,6 +18,10 @@ export class AuthService {
 
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
+
+  readonly isGlobalAdmin$ = this.user$.pipe(
+    map(user => user?.role === Role.ADMIN)
+  );
 
   constructor(private http: HttpClient) {
     this.restoreSession();

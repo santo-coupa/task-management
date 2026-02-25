@@ -17,6 +17,9 @@ import { AuthService } from '../core/services/auth.service';
 import { Role } from '../core/models/role.enum';
 import { CreateTaskRequest } from '../core/models/create-task-request.model';
 
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { CreateTaskModalComponent } from './create-task-modal/create-task-modal.component';
+
 @Component({
   selector: 'app-tasks',
   standalone: true,
@@ -32,20 +35,21 @@ import { CreateTaskRequest } from '../core/models/create-task-request.model';
     DialogModule,
     InputTextModule,
     DatePickerModule,
+    DynamicDialogModule,
   ],
+  providers: [DialogService],
   templateUrl: './tasks.html',
   styleUrl: './tasks.scss',
 })
 export class TasksComponent implements OnInit {
   private taskService = inject(TaskService);
   private authService = inject(AuthService);
+  private dialogService = inject(DialogService);
   private fb = inject(FormBuilder);
 
   readonly tasks$ = this.taskService.tasks$;
 
-  readonly isAdmin$: Observable<boolean> = this.authService.user$.pipe(
-    map((user) => user?.role === Role.ADMIN),
-  );
+  readonly isAdmin$ = this.authService.isGlobalAdmin$;
 
   showDialog = false;
 
@@ -112,5 +116,20 @@ export class TasksComponent implements OnInit {
     } else {
       table.filter(value, 'status', 'equals');
     }
+  }
+
+  openCreateTask(): void {
+    const ref = this.dialogService.open(CreateTaskModalComponent, {
+      header: 'Create Task',
+      width: '450px',
+      modal: true,
+    });
+
+    if (!ref) return;
+
+    ref.onClose.subscribe((createdTask) => {
+      if (createdTask) {
+      }
+    });
   }
 }

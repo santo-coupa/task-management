@@ -38,9 +38,19 @@ export class TaskService {
   }
 
   createTask(request: CreateTaskRequest) {
-    return this.http.post(this.API_URL, request).pipe(
-      map(() => {
-        this.loadTasks();
+    return this.http.post<TaskResponse>(this.API_URL, request).pipe(
+      map((createdTask) => {
+        const mappedTask : UserTask = {
+           id: createdTask.id,
+           title: createdTask.name,
+           status: createdTask.status as UserTaskStatus,
+           assignedToUserId: createdTask.assigneeId ?? ''
+        };
+
+        const currentTasks = this.tasksSubject.value;
+        this.tasksSubject.next([...currentTasks,mappedTask]);
+
+        return mappedTask;
       })
     );
   }

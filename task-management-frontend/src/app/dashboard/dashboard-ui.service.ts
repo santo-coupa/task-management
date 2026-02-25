@@ -16,24 +16,54 @@ export interface DashboardVm {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DashboardUiService {
-
   private taskService = inject(TaskService);
   private authService = inject(AuthService);
 
   readonly vm$: Observable<DashboardVm> = combineLatest([
     this.taskService.tasks$,
-    this.authService.user$
+    this.authService.isGlobalAdmin$,
   ]).pipe(
-    map(([tasks, user]) => ({
-      totalTasks: tasks.length,
-      pendingTasks: tasks.filter(t => t.status === UserTaskStatus.pending).length,
-      cancelledTasks: tasks.filter(t => t.status === UserTaskStatus.cancelled).length,
-      inProgressTasks: tasks.filter(t => t.status === UserTaskStatus.inprogress).length,
-      completedTasks: tasks.filter(t => t.status === UserTaskStatus.completed).length,
-      isAdmin: user?.role === Role.ADMIN
-    }))
+    map(([tasks, isAdmin]) => {
+      const stats = tasks.reduce(
+        (acc, task) => {
+          acc.totalTasks++;
+
+          switch (task.status) {
+            case UserTaskStatus.pending:
+              acc.pendingTasks++;
+              break;
+
+            case UserTaskStatus.inprogress:
+              acc.inProgressTasks++;
+              break;
+
+            case UserTaskStatus.completed:
+              acc.completedTasks++;
+              break;
+
+            case UserTaskStatus.cancelled:
+              acc.cancelledTasks++;
+              break;
+          }
+
+          return acc;
+        },
+        {
+          totalTasks: 0,
+          pendingTasks: 0,
+          cancelledTasks: 0,
+          inProgressTasks: 0,
+          completedTasks: 0,
+        },
+      );
+
+      return {
+        ...stats,
+        isAdmin,
+      };
+    }),
   );
 }
