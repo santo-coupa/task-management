@@ -80,7 +80,7 @@ public class AuthService : IAuthService
         };
     }
 
-    public void ValidateToken(string token)
+    public ClaimsPrincipal ValidateToken(string token)
     {
       try
       {
@@ -89,14 +89,21 @@ public class AuthService : IAuthService
         );
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        tokenHandler.ValidateToken(token, new TokenValidationParameters
-        {
-          ValidateIssuerSigningKey = true,
-          IssuerSigningKey = key,
-          ValidateIssuer = false,
-          ValidateAudience = false,
-          ClockSkew = TimeSpan.Zero,
-        }, out _);
+
+        var principal = tokenHandler.ValidateToken(
+          token,
+          new TokenValidationParameters
+          {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = key,
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ClockSkew = TimeSpan.Zero,
+          },
+          out _
+        );
+
+        return principal;
       }
       catch
       {

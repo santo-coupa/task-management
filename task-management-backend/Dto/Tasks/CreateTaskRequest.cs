@@ -4,7 +4,11 @@ namespace task_management_backend.Dto.Tasks;
 
 public class CreateTaskRequest
 {
-  public string Title { get; set; } = null!;
-  public UserTaskStatus Status { get; set; } = UserTaskStatus.pending;
-  public Guid AssignedUserId { get; set; }
+  public required string Name { get; set; }
+
+  public string? Description { get; set; }
+
+  public Guid? AssigneeId { get; set; }
+
+  public DateTime? DueDate { get; set; }
 }

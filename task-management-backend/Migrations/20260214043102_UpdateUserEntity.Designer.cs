@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using task_management_backend;
@@ -11,9 +12,11 @@ using task_management_backend;
 namespace task_management_backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260214043102_UpdateUserEntity")]
+    partial class UpdateUserEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,63 +75,37 @@ namespace task_management_backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("AssigneeId")
+                    b.Property<Guid>("AssignedUserId")
                         .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("DueDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssigneeId");
-
-                    b.HasIndex("CreatedById");
+                    b.HasIndex("AssignedUserId");
 
                     b.ToTable("UserTasks");
                 });
 
             modelBuilder.Entity("task_management_backend.Database.UserTask", b =>
                 {
-                    b.HasOne("task_management_backend.Database.User", "Assignee")
-                        .WithMany("AssignedTasks")
-                        .HasForeignKey("AssigneeId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("task_management_backend.Database.User", "CreatedBy")
-                        .WithMany("CreatedTasks")
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("task_management_backend.Database.User", "AssignedUser")
+                        .WithMany("Tasks")
+                        .HasForeignKey("AssignedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Assignee");
-
-                    b.Navigation("CreatedBy");
+                    b.Navigation("AssignedUser");
                 });
 
             modelBuilder.Entity("task_management_backend.Database.User", b =>
                 {
-                    b.Navigation("AssignedTasks");
-
-                    b.Navigation("CreatedTasks");
+                    b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618
         }

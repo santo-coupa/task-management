@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using task_management_backend.Attributes;
 using task_management_backend.Dto.Tasks;
 using task_management_backend.Services.Interfaces;
+using System.Security.Claims;
 
 namespace task_management_backend.Controllers;
 
@@ -28,8 +29,16 @@ public class TasksController : ControllerBase
   [HttpPost(Name = "CreateTask")]
   public ActionResult<GetTaskResponse> Create([FromBody] CreateTaskRequest request)
   {
-    var task = TaskService.CreateTask(request);
-    return task.Adapt<GetTaskResponse>();
+    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    if (userIdClaim == null)
+      throw new UnauthorizedAccessException();
+
+    var currentUserId = Guid.Parse(userIdClaim);
+
+    var task = TaskService.CreateTask(request, currentUserId);
+
+    return Ok(task.Adapt<GetTaskResponse>());
   }
 
   [HttpPatch("{id:guid}", Name = "UpdateTask")]
@@ -39,5 +48,12 @@ public class TasksController : ControllerBase
   {
     var task = TaskService.UpdateTask(id, request);
     return task.Adapt<GetTaskResponse>();
+  }
+
+  [HttpDelete("{id:guid}", Name = "DeleteTask")]
+  public IActionResult Delete(Guid id)
+  {
+    TaskService.DeleteTask(id);
+    return NoContent();
   }
 }

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using task_management_backend.Exceptions;
 
 namespace task_management_backend.Middleware;
 
@@ -37,6 +38,16 @@ public class ExceptionMiddleware
     {
       context.Response.StatusCode = StatusCodes.Status400BadRequest;
       await context.Response.WriteAsync(ex.Message);
+    }
+
+    catch (ForbiddenAccessException ex)
+    {
+      context.Response.StatusCode = StatusCodes.Status403Forbidden;
+      await context.Response.WriteAsJsonAsync(new
+      {
+        error = "Forbidden",
+        message = ex.Message
+      });
     }
     catch (Exception)
     {
