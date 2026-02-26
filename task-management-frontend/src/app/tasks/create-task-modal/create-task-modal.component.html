@@ -1,23 +1,40 @@
-<div class="modal-content">
+<form [formGroup]="form" (ngSubmit)="submit()" class="task-form">
 
-  <div class="field">
-    <label>Name</label>
+  <div class="form-field">
+    <label>Name *</label>
     <input pInputText formControlName="name" />
   </div>
 
-  <div class="field">
+  <div class="form-field">
     <label>Description</label>
     <input pInputText formControlName="description" />
   </div>
 
-  <div class="field">
+  <div class="form-field">
+    <label>Assign To (User ID)</label>
+    <input pInputText formControlName="assigneeId" />
+  </div>
+
+  <div class="form-field">
     <label>Due Date</label>
     <p-datePicker formControlName="dueDate"></p-datePicker>
   </div>
 
-  <div class="actions">
-    <button pButton label="Cancel" class="p-button-text" (click)="cancel()"></button>
-    <button pButton label="Create" (click)="submit()"></button>
+  <div class="dialog-actions">
+    <button
+      pButton
+      type="button"
+      label="Cancel"
+      class="p-button-text"
+      (click)="cancel()"
+    ></button>
+
+    <button
+      pButton
+      type="submit"
+      [label]="isEditMode ? 'Update Task' : 'Create Task'"
+      icon="pi pi-check"
+    ></button>
   </div>
 
-</div>
+</form>

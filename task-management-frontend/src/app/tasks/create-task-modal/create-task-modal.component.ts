@@ -1,16 +1,16 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
 
 import { TaskService } from '../../core/services/task.service';
-import { AuthService } from '../../core/services/auth.service';
-import { UserTaskStatus } from '../../core/models/task-status.enum';
 import { CreateTaskRequest } from '../../core/models/create-task-request.model';
+import { UpdateTaskRequest } from '../../core/models/update-task-request.model'; // create this
+import { UserTask } from '../../core/models/task.model';
 
 @Component({
   standalone: true,
@@ -22,20 +22,39 @@ import { CreateTaskRequest } from '../../core/models/create-task-request.model';
     InputTextModule,
     DatePickerModule
   ],
-  templateUrl: './create-task-modal.component.html'
+  templateUrl: './create-task-modal.component.html',
+  styleUrl: './create-task-modal.component.scss'
 })
-export class CreateTaskModalComponent {
+export class CreateTaskModalComponent implements OnInit {
 
   private fb = inject(FormBuilder);
   private taskService = inject(TaskService);
-  private authService = inject(AuthService);
   private ref = inject(DynamicDialogRef);
+  private config = inject(DynamicDialogConfig);
+
+  taskToEdit: UserTask | null = null;
+  isEditMode = false;
 
   form = this.fb.group({
     name: ['', Validators.required],
     description: [''],
+    assigneeId: [''],
     dueDate: [null]
   });
+
+  ngOnInit(): void {
+    this.taskToEdit = this.config.data?.task ?? null;
+    this.isEditMode = !!this.taskToEdit;
+
+    if (this.isEditMode && this.taskToEdit) {
+      this.form.patchValue({
+        name: this.taskToEdit.title,
+        assigneeId: this.taskToEdit.assignedToUserId || '',
+        description: '',
+        dueDate: null
+      });
+    }
+  }
 
   submit(): void {
 
@@ -44,24 +63,40 @@ export class CreateTaskModalComponent {
       return;
     }
 
-    const user = this.authService.getUser();
-    if (!user) return;
-
     const value = this.form.value;
 
-    const request: CreateTaskRequest = {
-      name: value.name!,
-      description: value.description || undefined,
-      assignedUserId: user.id,
-      status: UserTaskStatus.pending,
-      dueDate: value.dueDate
-        ? new Date(value.dueDate).toISOString()
-        : undefined
-    };
+    if (this.isEditMode && this.taskToEdit) {
 
-    this.taskService.createTask(request).subscribe((createdTask) => {
-      this.ref.close(createdTask);
-    });
+      const updateRequest: UpdateTaskRequest = {
+        name: value.name!,
+        description: value.description || undefined,
+        assigneeId: value.assigneeId || undefined,
+        dueDate: value.dueDate
+          ? new Date(value.dueDate).toISOString()
+          : undefined
+      };
+
+      this.taskService.updateTask(this.taskToEdit.id, updateRequest)
+        .subscribe(updated => {
+          this.ref.close(updated);
+        });
+
+    } else {
+
+      const createRequest: CreateTaskRequest = {
+        name: value.name!,
+        description: value.description || undefined,
+        assigneeId: value.assigneeId || undefined,
+        dueDate: value.dueDate
+          ? new Date(value.dueDate).toISOString()
+          : undefined
+      };
+
+      this.taskService.createTask(createRequest)
+        .subscribe(created => {
+          this.ref.close(created);
+        });
+    }
   }
 
   cancel(): void {

@@ -1,7 +1,7 @@
 import { UserTaskStatus } from "./task-status.enum";
 
 export interface UpdateTaskRequest{
-  name?: string;
+  name: string;
   description?: string;
   status?: UserTaskStatus;
   assigneeId?: string;
