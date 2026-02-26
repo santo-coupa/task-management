@@ -7,6 +7,7 @@ import { UserTask } from '../models/task.model';
 import { TaskResponse } from '../models/task-response.model';
 import { CreateTaskRequest } from '../models/create-task-request.model';
 import { UserTaskStatus } from '../models/task-status.enum';
+import { UpdateTaskRequest } from '../models/update-task-request.model';
 
 @Injectable({
   providedIn: 'root',
@@ -55,25 +56,25 @@ export class TaskService {
     );
   }
 
-  // updateTask(id: string, request: UpdateTaskRequest): Observable<UserTask> {
-  //   return this.http.patch<TaskResponse>(`${this.API_URL}/${id}`, request).pipe(
-  //     map((updated) => {
-  //       const mapped: UserTask = {
-  //         id: updated.id,
-  //         title: updated.name,
-  //         status: updated.status as UserTaskStatus,
-  //         assignedToUserId: updated.assigneeId ?? '',
-  //       };
+  updateTask(id: string, request: UpdateTaskRequest): Observable<UserTask> {
+    return this.http.patch<TaskResponse>(`${this.API_URL}/${id}`, request).pipe(
+      map((updated) => {
+        const mapped: UserTask = {
+          id: updated.id,
+          title: updated.name,
+          status: updated.status as UserTaskStatus,
+          assignedToUserId: updated.assigneeId ?? '',
+        };
 
-  //       const current = this.tasksSubject.value;
+        const current = this.tasksSubject.value;
 
-  //       const updatedList = current.map((task) => (task.id === id ? mapped : task));
+        const updatedList = current.map((task) => (task.id === id ? mapped : task));
 
-  //       this.tasksSubject.next(updatedList);
-  //       return mapped;
-  //     }),
-  //   );
-  // }
+        this.tasksSubject.next(updatedList);
+        return mapped;
+      }),
+    );
+  }
 
   deleteTask(id: string): Observable<void> {
     return this.http.delete<void>(`${this.API_URL}/${id}`).pipe(
