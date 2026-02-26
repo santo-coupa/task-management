@@ -13,6 +13,7 @@
   </div>
 
   <p-card>
+    <p-confirmdialog></p-confirmdialog>
     <p-table
       #dt
       [value]="(tasks$ | async) ?? []"

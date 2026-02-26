@@ -14,6 +14,9 @@ import { AuthService } from '../core/services/auth.service';
 import { CreateTaskModalComponent } from './create-task-modal/create-task-modal.component';
 import { UserTask } from '../core/models/task.model';
 
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+
 @Component({
   selector: 'app-tasks',
   standalone: true,
@@ -26,8 +29,9 @@ import { UserTask } from '../core/models/task.model';
     ButtonModule,
     CardModule,
     DynamicDialogModule,
+    ConfirmDialogModule,
   ],
-  providers: [DialogService],
+  providers: [DialogService, ConfirmationService],
   templateUrl: './tasks.html',
   styleUrl: './tasks.scss',
 })
@@ -35,6 +39,7 @@ export class TasksComponent implements OnInit {
   private taskService = inject(TaskService);
   private authService = inject(AuthService);
   private dialogService = inject(DialogService);
+  private confirmationService = inject(ConfirmationService);
 
   readonly tasks$ = this.taskService.tasks$;
   readonly isAdmin$ = this.authService.isGlobalAdmin$;
@@ -64,7 +69,17 @@ export class TasksComponent implements OnInit {
   }
 
   deleteTask(id: string): void {
-    this.taskService.deleteTask(id).subscribe();
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this task?',
+      header: 'Confirm Delete',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Yes',
+      rejectLabel: 'Cancel',
+
+      accept: () =>{
+      this.taskService.deleteTask(id).subscribe();
+    }
+    });
   }
 
   openEditTask(task: UserTask): void {
