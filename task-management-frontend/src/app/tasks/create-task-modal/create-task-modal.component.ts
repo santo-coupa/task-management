@@ -6,11 +6,13 @@ import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
+import { SelectModule } from 'primeng/select';
 
 import { TaskService } from '../../core/services/task.service';
 import { CreateTaskRequest } from '../../core/models/create-task-request.model';
 import { UpdateTaskRequest } from '../../core/models/update-task-request.model'; // create this
 import { UserTask } from '../../core/models/task.model';
+import { UserTaskStatus } from '../../core/models/task-status.enum';
 
 @Component({
   standalone: true,
@@ -20,7 +22,8 @@ import { UserTask } from '../../core/models/task.model';
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
-    DatePickerModule
+    DatePickerModule,
+    SelectModule,
   ],
   templateUrl: './create-task-modal.component.html',
   styleUrl: './create-task-modal.component.scss'
@@ -35,10 +38,18 @@ export class CreateTaskModalComponent implements OnInit {
   taskToEdit: UserTask | null = null;
   isEditMode = false;
 
+  readonly statusOptions = [
+    {label: 'Pending', value: UserTaskStatus.pending},
+    {label: 'In Progress', value: UserTaskStatus.inprogress},
+    {label: 'Completed', value: UserTaskStatus.completed},
+    {label: 'Cancelled', value: UserTaskStatus.cancelled},
+  ];
+
   form = this.fb.group({
     name: ['', Validators.required],
     description: [''],
     assigneeId: [''],
+    status: [UserTaskStatus.pending],
     dueDate: [null]
   });
 
@@ -50,6 +61,7 @@ export class CreateTaskModalComponent implements OnInit {
       this.form.patchValue({
         name: this.taskToEdit.title,
         assigneeId: this.taskToEdit.assignedToUserId || '',
+        status: this.taskToEdit.status,
         description: '',
         dueDate: null
       });
@@ -71,6 +83,7 @@ export class CreateTaskModalComponent implements OnInit {
         name: value.name!,
         description: value.description || undefined,
         assigneeId: value.assigneeId || undefined,
+        status: value.status!,
         dueDate: value.dueDate
           ? new Date(value.dueDate).toISOString()
           : undefined
@@ -87,6 +100,7 @@ export class CreateTaskModalComponent implements OnInit {
         name: value.name!,
         description: value.description || undefined,
         assigneeId: value.assigneeId || undefined,
+        status: value.status!,
         dueDate: value.dueDate
           ? new Date(value.dueDate).toISOString()
           : undefined

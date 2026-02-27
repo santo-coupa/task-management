@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, map, tap } from 'rxjs';
 
 import { TaskResponse } from '../models/task-response.model';
 import { UserTask } from '../models/task.model';
@@ -19,13 +19,11 @@ export class TaskService {
   private tasksSubject = new BehaviorSubject<UserTask[]>([]);
   readonly tasks$ = this.tasksSubject.asObservable();
 
-  loadTasks(): void {
-    this.http
-      .get<TaskResponse[]>(this.API_URL)
-      .pipe(map((tasks) => tasks.map((task) => this.mapTask(task))))
-      .subscribe((tasks) => {
-        this.tasksSubject.next(tasks);
-      });
+  loadTasks() {
+    return this.http.get<TaskResponse[]>(this.API_URL).pipe(
+      map((tasks) => tasks.map((t) => this.mapTask(t))),
+      tap((mapped) => this.tasksSubject.next(mapped)),
+    );
   }
 
   createTask(request: CreateTaskRequest) {

@@ -16,6 +16,17 @@
   </div>
 
   <div class="form-field">
+    <label>Status</label>
+    <p-select
+      [options]="statusOptions"
+      formControlName="status"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Select status"
+    ></p-select>
+  </div>
+
+  <div class="form-field">
     <label>Due Date</label>
     <p-datePicker formControlName="dueDate"></p-datePicker>
   </div>

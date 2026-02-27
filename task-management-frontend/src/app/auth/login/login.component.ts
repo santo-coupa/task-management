@@ -15,6 +15,7 @@ import { CardModule } from 'primeng/card';
 
 import { AuthService } from '../../core/services/auth.service';
 import { take } from 'rxjs';
+import { TaskService } from '../../core/services/task.service';
 
 @Component({
   selector: 'app-login',
@@ -35,6 +36,7 @@ export class LoginComponent {
   private fb = inject(NonNullableFormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private taskService = inject(TaskService);
 
   loading = false;
   errorMessage = '';
