@@ -6,6 +6,9 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { ConfirmationService } from 'primeng/api';
+import { CardModule } from 'primeng/card';
+import { SelectModule } from 'primeng/select';
+import { FormsModule } from '@angular/forms';
 
 import { UserService } from '../core/services/user.service';
 import { SystemUser } from '../core/models/system-user.model';
@@ -18,6 +21,9 @@ import { CreateEditUserModalComponent } from '../core/models/users-model-compone
     CommonModule,
     AsyncPipe,
     TableModule,
+    FormsModule,
+    CardModule,
+    SelectModule,
     ButtonModule,
     ConfirmDialogModule,
     DynamicDialogModule,
@@ -31,6 +37,7 @@ export class UsersComponent implements OnInit {
   private dialogService = inject(DialogService);
 
   readonly users$ = this.userService.users$;
+  selectedStatus: boolean | null = null;
 
   loading = false;
 
@@ -41,6 +48,25 @@ export class UsersComponent implements OnInit {
       next: () => (this.loading = false),
       error: () => (this.loading = false),
     });
+  }
+
+  statusOptions = [
+    { label: 'All', value: null },
+    { label: 'Active', value: true },
+    { label: 'Inactive', value: false },
+  ];
+
+  onGlobalFilter(event: Event, table: any): void {
+    const value = (event.target as HTMLInputElement).value;
+    table.filterGlobal(value, 'contains');
+  }
+
+  onStatusFilter(value: boolean | null, table: any): void {
+    if (value === null) {
+      table.clear();
+    } else {
+      table.filter(value, 'isActive', 'equals');
+    }
   }
 
   openCreate(): void {
