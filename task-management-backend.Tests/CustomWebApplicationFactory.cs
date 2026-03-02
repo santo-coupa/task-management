@@ -14,11 +14,9 @@ public class CustomWebApplicationFactory
 
     builder.ConfigureServices(services =>
     {
-      // Remove existing DbContext registrations
       services.RemoveAll(typeof(DbContextOptions<ApplicationDbContext>));
       services.RemoveAll(typeof(ApplicationDbContext));
 
-      // Register InMemory DB
       services.AddDbContext<ApplicationDbContext>(options =>
       {
         options.UseInMemoryDatabase("TestDatabase");
