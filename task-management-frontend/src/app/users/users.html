@@ -1,3 +1,15 @@
+<div class="users-header">
+  <h2>Users</h2>
+
+  <button
+    pButton
+    label="New User"
+    icon="pi pi-plus"
+    class="p-button-sm"
+    (click)="openCreate()"
+  ></button>
+</div>
+
 <p-table
   [value]="(users$ | async) ?? []"
   [paginator]="true"
@@ -8,7 +20,7 @@
     <tr>
       <th>Username</th>
       <th>Email</th>
-      <th>Role</th>
+      <th>Title</th>
       <th>Status</th>
       <th>Actions</th>
     </tr>
@@ -18,13 +30,20 @@
     <tr>
       <td>{{ user.username }}</td>
       <td>{{ user.email }}</td>
-      <td>{{ user.role }}</td>
+      <td>{{ user.title }}</td>
       <td>{{ user.isActive ? 'Active' : 'Inactive' }}</td>
       <td>
         <button
           pButton
+          icon="pi pi-pencil"
+          class="p-button-text"
+          (click)="openEdit(user)"
+        ></button>
+
+        <button
+          pButton
           icon="pi pi-trash"
-          class="p-button-danger p-button-sm"
+          class="p-button-danger p-button-text"
           (click)="deleteUser(user.id)"
         ></button>
       </td>

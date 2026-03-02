@@ -1,0 +1,63 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="user-form">
+
+  <div class="form-grid">
+
+    <div class="field">
+      <label>Username *</label>
+      <input pInputText formControlName="username" />
+    </div>
+
+    <div class="field">
+      <label>Email *</label>
+      <input pInputText formControlName="email" />
+    </div>
+
+    <div class="field">
+      <label>Password {{ isEditMode ? '(Optional)' : '*' }}</label>
+      <input pInputText type="password" formControlName="password" />
+    </div>
+
+    <div class="field">
+      <label>First Name</label>
+      <input pInputText formControlName="firstName" />
+    </div>
+
+    <div class="field">
+      <label>Last Name</label>
+      <input pInputText formControlName="lastName" />
+    </div>
+
+    <div class="field">
+      <label>Title</label>
+      <input pInputText formControlName="title" />
+    </div>
+
+  </div>
+
+  <div class="status-row">
+    <div class="status-label">Account Status</div>
+    <p-checkbox
+      formControlName="isActive"
+      binary="true"
+      label="Active"
+    ></p-checkbox>
+  </div>
+
+  <div class="modal-actions">
+    <button
+      pButton
+      type="button"
+      label="Cancel"
+      class="p-button-text"
+      (click)="cancel()"
+    ></button>
+
+    <button
+      pButton
+      type="submit"
+      [label]="isEditMode ? 'Update User' : 'Create User'"
+      icon="pi pi-check"
+    ></button>
+  </div>
+
+</form>

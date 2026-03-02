@@ -5,6 +5,7 @@ export interface CreateUserRequest {
   email: string;
   firstName?: string;
   lastName?: string;
+  password?: string;
   title?: string;
   role: Role;
   isActive: boolean;
