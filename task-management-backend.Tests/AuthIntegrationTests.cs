@@ -38,7 +38,7 @@ public class AuthIntegrationTests
     };
 
     _context.Users.Add(user);
-    _context.SaveChanges();
+    await _context.SaveChangesAsync();
 
     var loginRequest = new AuthenticateRequest
     {
@@ -59,5 +59,36 @@ public class AuthIntegrationTests
 
     Assert.NotNull(result);
     Assert.False(string.IsNullOrEmpty(result!.Token));
+  }
+
+  [Fact]
+  public async Task Login_WithWrongPassword_ReturnsBadRequest()
+  {
+    // Arrange
+    var user = new User
+    {
+      Id = Guid.NewGuid(),
+      Username = "testuser2",
+      Email = "test2@example.com",
+      PasswordHashed = BCrypt.Net.BCrypt.HashPassword("password123"),
+      CreatedAt = DateTime.UtcNow
+    };
+
+    _context.Users.Add(user);
+    await _context.SaveChangesAsync();
+
+    var loginRequest = new AuthenticateRequest
+    {
+      Username = "testuser2",
+      Password = "password1234"
+    };
+
+    // Act
+    var response = await _client.PostAsJsonAsync(
+      "/auth/authenticate",
+      loginRequest);
+
+    // Assert
+    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
   }
 }
