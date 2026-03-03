@@ -1,53 +1,48 @@
 <div class="users-wrapper">
-
   <div class="users-header">
-    <h2>Users</h2>
+  <h2>Users</h2>
 
-    <button
-      pButton
-      label="New User"
-      icon="pi pi-plus"
-      class="p-button-sm"
-      (click)="openCreate()"
-    ></button>
-  </div>
+  <button
+    pButton
+    label="New User"
+    icon="pi pi-plus"
+    class="p-button-sm"
+    (click)="openCreate()"
+  ></button>
+</div>
 
   <p-card>
-
     <p-table
       #dt
       [value]="(users$ | async) ?? []"
       [paginator]="true"
       [rows]="8"
       [rowsPerPageOptions]="[5, 8, 15]"
-      [globalFilterFields]="['username','email','title']"
+      [globalFilterFields]="['username', 'email', 'title']"
       responsiveLayout="scroll"
     >
-
       <ng-template pTemplate="caption">
-        <div class="table-toolbar">
+  <div class="table-toolbar">
 
-          <span class="search-box">
-            <i class="pi pi-search"></i>
-            <input
-              pInputText
-              type="text"
-              placeholder="Search users..."
-              (input)="onGlobalFilter($event, dt)"
-            />
-          </span>
+    <input
+      pInputText
+      type="text"
+      placeholder="Search users..."
+      class="search-input"
+      (input)="onGlobalFilter($event, dt)"
+    />
 
-          <p-select
-            [options]="statusOptions"
-            [(ngModel)]="selectedStatus"
-            placeholder="Filter by status"
-            class="status-filter"
-            (onChange)="onStatusFilter($event.value ?? null, dt)"
-          >
-          </p-select>
+    <p-select
+      [options]="statusOptions"
+      [(ngModel)]="selectedStatus"
+      placeholder="All"
+      class="status-filter"
+      (onChange)="onStatusFilter($event.value, dt)"
+    >
+    </p-select>
 
-        </div>
-      </ng-template>
+  </div>
+</ng-template>
 
       <ng-template pTemplate="header">
         <tr>
@@ -71,13 +66,12 @@
             <p-sortIcon field="isActive"></p-sortIcon>
           </th>
 
-          <th style="width: 120px;">Actions</th>
+          <th style="width: 120px">Actions</th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-user>
         <tr>
-
           <td>{{ user.username }}</td>
 
           <td>{{ user.email }}</td>
@@ -85,16 +79,12 @@
           <td>{{ user.title || '-' }}</td>
 
           <td>
-            <span
-              class="status-badge"
-              [ngClass]="user.isActive ? 'active' : 'inactive'"
-            >
+            <span class="status-badge" [ngClass]="user.isActive ? 'active' : 'inactive'">
               {{ user.isActive ? 'Active' : 'Inactive' }}
             </span>
           </td>
 
           <td class="actions">
-
             <button
               pButton
               icon="pi pi-pencil"
@@ -108,24 +98,17 @@
               class="p-button-rounded p-button-text p-button-danger p-button-sm"
               (click)="deleteUser(user.id)"
             ></button>
-
           </td>
-
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="5" class="empty">
-            No users found.
-          </td>
+          <td colspan="5" class="empty">No users found.</td>
         </tr>
       </ng-template>
-
     </p-table>
-
   </p-card>
-
 </div>
 
 <p-confirmDialog></p-confirmDialog>
