@@ -3,6 +3,8 @@ import { combineLatest, map, Observable } from 'rxjs';
 
 import { TaskService } from '../core/services/task.service';
 import { AuthService } from '../core/services/auth.service';
+
+import { UserTask } from '../core/models/task.model';
 import { UserTaskStatus } from '../core/models/task-status.enum';
 
 export interface DashboardVm {
@@ -12,50 +14,63 @@ export interface DashboardVm {
   inProgressTasks: number;
   completedTasks: number;
   isAdmin: boolean;
+  recentTasks: UserTask[];
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class DashboardUiService {
+
   private taskService = inject(TaskService);
+  private authService = inject(AuthService);
 
-  readonly vm$ = this.taskService.tasks$.pipe(
-    map((tasks) => {
-      const stats = tasks.reduce(
-        (acc, task) => {
-          acc.totalTasks++;
+  readonly vm$: Observable<DashboardVm> =
+    combineLatest([
+      this.taskService.tasks$,
+      this.authService.isGlobalAdmin$
+    ]).pipe(
+      map(([tasks, isAdmin]) => {
 
-          switch (task.status) {
-            case UserTaskStatus.pending:
-              acc.pendingTasks++;
-              break;
-            case UserTaskStatus.completed:
-              acc.completedTasks++;
-              break;
-            case UserTaskStatus.inprogress:
-              acc.inProgressTasks++;
-              break;
-            case UserTaskStatus.cancelled:
-              acc.cancelledTasks++;
-              break;
-          }
-
-          return acc;
-        },
-        {
+        const stats = {
           totalTasks: 0,
           pendingTasks: 0,
-          completedTasks: 0,
-          inProgressTasks: 0,
           cancelledTasks: 0,
-        },
-      );
+          inProgressTasks: 0,
+          completedTasks: 0
+        };
 
-      return {
-        ...stats,
-        isAdmin: false,
-      };
-    }),
-  );
+        for (const task of tasks) {
+
+          stats.totalTasks++;
+
+          switch (task.status) {
+
+            case UserTaskStatus.pending:
+              stats.pendingTasks++;
+              break;
+
+            case UserTaskStatus.inprogress:
+              stats.inProgressTasks++;
+              break;
+
+            case UserTaskStatus.completed:
+              stats.completedTasks++;
+              break;
+
+            case UserTaskStatus.cancelled:
+              stats.cancelledTasks++;
+              break;
+          }
+        }
+
+        const recentTasks = [...tasks].slice(-5).reverse();
+
+        return {
+          ...stats,
+          isAdmin,
+          recentTasks
+        };
+      })
+    );
 }

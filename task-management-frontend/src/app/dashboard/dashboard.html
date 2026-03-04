@@ -1,37 +1,63 @@
-<h2>Dashboard</h2>
+<div class="dashboard-wrapper">
+  @if (vm$ | async; as vm) {
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Tasks</h3>
+        <p>{{ vm.totalTasks }}</p>
+      </div>
 
-@if (vm$ | async; as vm) {
+      <div class="stat-card">
+        <h3>Pending</h3>
+        <p>{{ vm.pendingTasks }}</p>
+      </div>
 
-  <div class="stats">
-    <div class="card">
-      <h3>Total Tasks</h3>
-      <p>{{ vm.totalTasks }}</p>
+      <div class="stat-card">
+        <h3>In Progress</h3>
+        <p>{{ vm.inProgressTasks }}</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Completed</h3>
+        <p>{{ vm.completedTasks }}</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Cancelled</h3>
+        <p>{{ vm.cancelledTasks }}</p>
+      </div>
     </div>
 
-    <div class="card">
-      <h3>In Progress</h3>
-      <p>{{ vm.inProgressTasks }}</p>
-    </div>
+    <div class="dashboard-content">
+      <div class="chart-container">
+        <p-chart
+          type="pie"
+          [data]="{
+            labels: ['Pending', 'In Progress', 'Completed', 'Cancelled'],
+            datasets: [
+              {
+                data: [vm.pendingTasks, vm.inProgressTasks, vm.completedTasks, vm.cancelledTasks],
+                backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#ef4444'],
+                borderWidth: 0,
+              },
+            ],
+          }"
+        ></p-chart>
+      </div>
 
-    <div class="card">
-      <h3>Pending</h3>
-      <p>{{ vm.pendingTasks }}</p>
-    </div>
+      <div class="recent-tasks">
+        <h3>Recent Tasks</h3>
 
-    <div class="card">
-      <h3>Completed</h3>
-      <p>{{ vm.completedTasks }}</p>
-    </div>
-  </div>
-
-  @if (vm.isAdmin) {
-    <div class="admin-note">
-      <p>You are viewing the Admin dashboard.</p>
-    </div>
-  } @else {
-    <div class="user-note">
-      <p>You are viewing your personal dashboard.</p>
+        <ul>
+          @for (task of vm.recentTasks; track task.id) {
+            <li>
+              {{ task.title }}
+              <span class="status-badge status-{{ getStatusLabel(task.status) }}">
+                {{ getStatusLabel(task.status) }}
+              </span>
+            </li>
+          }
+        </ul>
+      </div>
     </div>
   }
-
-}
+</div>
