@@ -11,4 +11,5 @@ public class CreateTaskRequest
   public Guid? AssigneeId { get; set; }
 
   public DateTime? DueDate { get; set; }
+  public UserTaskStatus? Status { get; set; }
 }

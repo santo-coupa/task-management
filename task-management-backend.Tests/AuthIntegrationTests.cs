@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using BCrypt.Net;
 using Microsoft.Extensions.DependencyInjection;
 using task_management_backend;
 using task_management_backend.Database;
@@ -24,21 +23,26 @@ public class AuthIntegrationTests
     _context.Database.EnsureCreated();
   }
 
-  [Fact]
-  public async Task Login_WithValidCredentials_ReturnsToken()
+  private async Task SeedUser(string username, string password)
   {
-    // Arrange
     var user = new User
     {
       Id = Guid.NewGuid(),
-      Username = "testuser",
-      Email = "test@example.com",
-      PasswordHashed = BCrypt.Net.BCrypt.HashPassword("password123"),
+      Username = username,
+      Email = $"{username}@test.com",
+      PasswordHashed = BCrypt.Net.BCrypt.HashPassword(password),
       CreatedAt = DateTime.UtcNow
     };
 
     _context.Users.Add(user);
     await _context.SaveChangesAsync();
+  }
+
+  [Fact]
+  public async Task Login_WithValidCredentials_ReturnsToken()
+  {
+    // Arrange
+    await SeedUser("testuser", "password123");
 
     var loginRequest = new AuthenticateRequest
     {
@@ -65,22 +69,31 @@ public class AuthIntegrationTests
   public async Task Login_WithWrongPassword_ReturnsBadRequest()
   {
     // Arrange
-    var user = new User
-    {
-      Id = Guid.NewGuid(),
-      Username = "testuser2",
-      Email = "test2@example.com",
-      PasswordHashed = BCrypt.Net.BCrypt.HashPassword("password123"),
-      CreatedAt = DateTime.UtcNow
-    };
-
-    _context.Users.Add(user);
-    await _context.SaveChangesAsync();
+    await SeedUser("testuser", "password123");
 
     var loginRequest = new AuthenticateRequest
     {
-      Username = "testuser2",
-      Password = "password1234"
+      Username = "testuser",
+      Password = "wrongpassword"
+    };
+
+    // Act
+    var response = await _client.PostAsJsonAsync(
+      "/auth/authenticate",
+      loginRequest);
+
+    // Assert
+    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+  }
+
+  [Fact]
+  public async Task Login_WithUnknownUser_ReturnsBadRequest()
+  {
+    // Arrange
+    var loginRequest = new AuthenticateRequest
+    {
+      Username = "unknownuser",
+      Password = "password123"
     };
 
     // Act
