@@ -19,7 +19,6 @@ export interface DashboardVm {
 })
 export class DashboardUiService {
   private taskService = inject(TaskService);
-  private authService = inject(AuthService);
 
   readonly vm$ = this.taskService.tasks$.pipe(
     map((tasks) => {

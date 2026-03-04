@@ -19,11 +19,14 @@ export class TaskService {
   private tasksSubject = new BehaviorSubject<UserTask[]>([]);
   readonly tasks$ = this.tasksSubject.asObservable();
 
-  loadTasks() {
-    return this.http.get<TaskResponse[]>(this.API_URL).pipe(
-      map((tasks) => tasks.map((t) => this.mapTask(t))),
-      tap((mapped) => this.tasksSubject.next(mapped)),
-    );
+  loadTasks(): void {
+    this.http
+      .get<TaskResponse[]>(this.API_URL)
+      .pipe(map((tasks) => tasks.map((t) => this.mapTask(t))))
+      .subscribe({
+        next: (mapped) => this.tasksSubject.next(mapped),
+        error: (err) => console.error('Failed to load tasks', err),
+      });
   }
 
   createTask(request: CreateTaskRequest) {
