@@ -4,7 +4,6 @@ import { combineLatest, map, Observable } from 'rxjs';
 import { TaskService } from '../core/services/task.service';
 import { AuthService } from '../core/services/auth.service';
 import { UserTaskStatus } from '../core/models/task-status.enum';
-import { Role } from '../core/models/role.enum';
 
 export interface DashboardVm {
   totalTasks: number;
@@ -22,11 +21,8 @@ export class DashboardUiService {
   private taskService = inject(TaskService);
   private authService = inject(AuthService);
 
-  readonly vm$: Observable<DashboardVm> = combineLatest([
-    this.taskService.tasks$,
-    this.authService.isGlobalAdmin$,
-  ]).pipe(
-    map(([tasks, isAdmin]) => {
+  readonly vm$ = this.taskService.tasks$.pipe(
+    map((tasks) => {
       const stats = tasks.reduce(
         (acc, task) => {
           acc.totalTasks++;
@@ -35,15 +31,12 @@ export class DashboardUiService {
             case UserTaskStatus.pending:
               acc.pendingTasks++;
               break;
-
-            case UserTaskStatus.inprogress:
-              acc.inProgressTasks++;
-              break;
-
             case UserTaskStatus.completed:
               acc.completedTasks++;
               break;
-
+            case UserTaskStatus.inprogress:
+              acc.inProgressTasks++;
+              break;
             case UserTaskStatus.cancelled:
               acc.cancelledTasks++;
               break;
@@ -54,15 +47,15 @@ export class DashboardUiService {
         {
           totalTasks: 0,
           pendingTasks: 0,
-          cancelledTasks: 0,
-          inProgressTasks: 0,
           completedTasks: 0,
+          inProgressTasks: 0,
+          cancelledTasks: 0,
         },
       );
 
       return {
         ...stats,
-        isAdmin,
+        isAdmin: false,
       };
     }),
   );

@@ -5,7 +5,6 @@ import { DefaultLayoutComponent } from './layout/default-layout/default-layout.c
 import { Role } from './core/models/role.enum';
 import { ProfileComponent } from './profile/profile';
 import { DashboardComponent } from './dashboard/dashboard';
-import { tasksResolver } from './core/resolvers/tasks.resolver';
 
 export const routes: Routes = [
   {
@@ -17,9 +16,6 @@ export const routes: Routes = [
     path: '',
     component: DefaultLayoutComponent,
     canActivate: [authGuard],
-    resolve: {
-      tasksLoaded: tasksResolver,
-    },
     children: [
       {
         path: 'dashboard',

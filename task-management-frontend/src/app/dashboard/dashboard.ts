@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardUiService, DashboardVm } from './dashboard-ui.service';
 import { Observable } from 'rxjs';
+import { TaskService } from '../core/services/task.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +14,11 @@ import { Observable } from 'rxjs';
 export class DashboardComponent {
 
   private uiService = inject(DashboardUiService);
+  private taskService = inject(TaskService);
 
   vm$: Observable<DashboardVm> = this.uiService.vm$;
+
+  ngOnInit(){
+    this.taskService.loadTasks();
+  }
 }
