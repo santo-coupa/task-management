@@ -1,10 +1,36 @@
+.profile-wrapper {
+  padding: 24px;
+}
+
+p-card {
+  max-width: 650px;
+  margin: auto;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 20px;
+}
+
 .field {
   display: flex;
   flex-direction: column;
-  margin-bottom: 16px;
 }
 
-.buttons {
+.field label {
+  font-size: 13px;
+  opacity: 0.7;
+  margin-bottom: 4px;
+}
+
+.field span {
+  font-size: 15px;
+}
+
+.actions {
+  margin-top: 20px;
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
