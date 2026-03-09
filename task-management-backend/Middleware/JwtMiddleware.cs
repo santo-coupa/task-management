@@ -25,7 +25,6 @@ public class JwtMiddleware
           await _next(context);
           return;
         }
-
         var endpoint = context.GetEndpoint();
 
         var allowAnonymous = endpoint?.Metadata

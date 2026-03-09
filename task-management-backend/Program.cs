@@ -56,6 +56,7 @@ app.UseCors("AllowFrontend");
 
 // Middleware
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseRouting();
 app.UseMiddleware<JwtMiddleware>();
 
 if (app.Environment.IsDevelopment())

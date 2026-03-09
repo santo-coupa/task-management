@@ -146,4 +146,57 @@ public class TasksIntegrationTests
     var deleted = await _context.UserTasks.FindAsync(task.Id);
     Assert.Null(deleted);
   }
+
+  [Fact]
+  public async Task GetTasks_WithoutToken_ReturnsUnauthorized()
+  {
+    var response = await _client.GetAsync("/tasks");
+
+    Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+  }
+
+  [Fact]
+  public async Task GetTasks_WithInvalidToken_ReturnsUnauthorized()
+  {
+    _client.DefaultRequestHeaders.Authorization =
+      new AuthenticationHeaderValue("Bearer", "invalidtoken");
+
+    var response = await _client.GetAsync("/tasks");
+
+    Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+  }
+
+  [Fact]
+  public async Task CreateTask_WithoutName_ReturnsBadRequest()
+  {
+    var token = await LoginAndGetToken();
+    AttachToken(token);
+
+    var request = new
+    {
+      Description = "Missing name"
+    };
+
+    var response = await _client.PostAsJsonAsync("/tasks", request);
+
+    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+  }
+
+  [Fact]
+  public async Task UpdateTask_TaskNotFound_ReturnsBadRequest()
+  {
+    var token = await LoginAndGetToken();
+    AttachToken(token);
+
+    var request = new UpdateTaskRequest
+    {
+      Name = "Updated"
+    };
+
+    var response = await _client.PatchAsJsonAsync(
+      $"/tasks/{Guid.NewGuid()}",
+      request);
+
+    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+  }
 }

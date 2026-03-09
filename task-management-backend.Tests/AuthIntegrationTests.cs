@@ -41,7 +41,6 @@ public class AuthIntegrationTests
   [Fact]
   public async Task Login_WithValidCredentials_ReturnsToken()
   {
-    // Arrange
     await SeedUser("testuser", "password123");
 
     var loginRequest = new AuthenticateRequest
@@ -50,12 +49,10 @@ public class AuthIntegrationTests
       Password = "password123"
     };
 
-    // Act
     var response = await _client.PostAsJsonAsync(
       "/auth/authenticate",
       loginRequest);
 
-    // Assert
     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
     var result = await response.Content
@@ -68,7 +65,6 @@ public class AuthIntegrationTests
   [Fact]
   public async Task Login_WithWrongPassword_ReturnsBadRequest()
   {
-    // Arrange
     await SeedUser("testuser", "password123");
 
     var loginRequest = new AuthenticateRequest
@@ -77,31 +73,26 @@ public class AuthIntegrationTests
       Password = "wrongpassword"
     };
 
-    // Act
     var response = await _client.PostAsJsonAsync(
       "/auth/authenticate",
       loginRequest);
 
-    // Assert
     Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
   }
 
   [Fact]
   public async Task Login_WithUnknownUser_ReturnsBadRequest()
   {
-    // Arrange
     var loginRequest = new AuthenticateRequest
     {
       Username = "unknownuser",
       Password = "password123"
     };
 
-    // Act
     var response = await _client.PostAsJsonAsync(
       "/auth/authenticate",
       loginRequest);
 
-    // Assert
     Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
   }
 }

@@ -29,11 +29,14 @@ public class UsersIntegrationTests
 
   private async Task<string> LoginAndGetToken()
   {
+    var username = $"admin_{Guid.NewGuid()}";
+    var email = $"{Guid.NewGuid()}@test.com";
+
     var admin = new User
     {
       Id = Guid.NewGuid(),
-      Username = "adminuser",
-      Email = "admin@test.com",
+      Username = username,
+      Email = email,
       PasswordHashed = BCrypt.Net.BCrypt.HashPassword("password123"),
       Role = UserRole.Admin,
       CreatedAt = DateTime.UtcNow
@@ -44,11 +47,14 @@ public class UsersIntegrationTests
 
     var loginRequest = new AuthenticateRequest
     {
-      Username = "adminuser",
+      Username = username,
       Password = "password123"
     };
 
     var response = await _client.PostAsJsonAsync("/auth/authenticate", loginRequest);
+
+    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
     var result = await response.Content.ReadFromJsonAsync<AuthenticateResponse>();
 
     return result!.Token;
@@ -88,6 +94,7 @@ public class UsersIntegrationTests
 
     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
+    _context.ChangeTracker.Clear();
     var user = _context.Users.FirstOrDefault(u => u.Username == "testuser");
 
     Assert.NotNull(user);
@@ -159,5 +166,73 @@ public class UsersIntegrationTests
     var deleted = await _context.Users.FindAsync(user.Id);
 
     Assert.Null(deleted);
+  }
+
+  [Fact]
+  public async Task GetUsers_WithoutToken_ReturnsUnauthorized()
+  {
+    var response = await _client.GetAsync("/users");
+
+    Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+  }
+
+  [Fact]
+  public async Task DeleteUser_UserDoesNotExist_ReturnsBadRequest()
+  {
+    var token = await LoginAndGetToken();
+    AttachToken(token);
+
+    var randomId = Guid.NewGuid();
+
+    var response = await _client.DeleteAsync($"/users/{randomId}");
+
+    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+  }
+
+  [Fact]
+  public async Task DeleteUser_NonAdmin_ReturnsForbidden()
+  {
+    var admin = new User
+    {
+      Id = Guid.NewGuid(),
+      Username = "admin",
+      Email = "admin@test.com",
+      PasswordHashed = BCrypt.Net.BCrypt.HashPassword("password"),
+      Role = UserRole.Admin,
+      CreatedAt = DateTime.UtcNow
+    };
+
+    var user = new User
+    {
+      Id = Guid.NewGuid(),
+      Username = "user",
+      Email = "user@test.com",
+      PasswordHashed = BCrypt.Net.BCrypt.HashPassword("password"),
+      Role = UserRole.User,
+      CreatedAt = DateTime.UtcNow
+    };
+
+    _context.Users.Add(admin);
+    _context.Users.Add(user);
+    await _context.SaveChangesAsync();
+
+    var loginRequest = new AuthenticateRequest
+    {
+      Username = "user",
+      Password = "password"
+    };
+
+    var loginResponse = await _client.PostAsJsonAsync(
+      "/auth/authenticate",
+      loginRequest);
+
+    var result = await loginResponse.Content
+      .ReadFromJsonAsync<AuthenticateResponse>();
+
+    AttachToken(result!.Token);
+
+    var response = await _client.DeleteAsync($"/users/{admin.Id}");
+
+    Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
   }
 }
