@@ -36,7 +36,6 @@ export class LoginComponent {
   private fb = inject(NonNullableFormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private taskService = inject(TaskService);
 
   loading = false;
   errorMessage = '';
