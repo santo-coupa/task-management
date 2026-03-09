@@ -24,11 +24,18 @@ builder.Services.AddCors(options =>
 });
 
 // Database
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-  options.UseNpgsql(
-    builder.Configuration.GetConnectionString("DefaultConnection")
-  )
-);
+if (builder.Environment.EnvironmentName == "Testing")
+{
+  builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseInMemoryDatabase("TestDatabase"));
+}
+else
+{
+  builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(
+      builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
+}
 
 // Mapster
 builder.Services.AddMapster();
@@ -61,28 +68,30 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 
-//if there's no user, this is for testing
-using (var scope = app.Services.CreateScope())
+//Prevent seeding during integration testing
+if (!app.Environment.IsEnvironment("Testing"))
 {
-  var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-  db.Database.EnsureCreated();
-
-  if (!db.Users.Any())
+  using (var scope = app.Services.CreateScope())
   {
-    var adminUser = new User
-    {
-      Id = Guid.CreateVersion7(),
-      Username = "admin",
-      Email = "admin@test.com",
-      PasswordHashed = BCrypt.Net.BCrypt.HashPassword("admin123"),
-      Role = UserRole.Admin
-    };
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-    db.Users.Add(adminUser);
-    db.SaveChanges();
+    db.Database.EnsureCreated();
+
+    if (!db.Users.Any())
+    {
+      var adminUser = new User
+      {
+        Id = Guid.CreateVersion7(),
+        Username = "admin",
+        Email = "admin@test.com",
+        PasswordHashed = BCrypt.Net.BCrypt.HashPassword("admin123"),
+        Role = UserRole.Admin
+      };
+
+      db.Users.Add(adminUser);
+      db.SaveChanges();
+    }
   }
 }
-
 
 app.Run();
