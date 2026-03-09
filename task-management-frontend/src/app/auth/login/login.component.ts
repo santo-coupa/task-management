@@ -15,6 +15,7 @@ import { CardModule } from 'primeng/card';
 
 import { AuthService } from '../../core/services/auth.service';
 import { take } from 'rxjs';
+import { TaskService } from '../../core/services/task.service';
 
 @Component({
   selector: 'app-login',

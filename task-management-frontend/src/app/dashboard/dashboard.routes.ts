@@ -5,5 +5,5 @@ export const dashboardRoutes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-  },
+  }
 ];

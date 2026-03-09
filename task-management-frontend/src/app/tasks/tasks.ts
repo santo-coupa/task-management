@@ -1,24 +1,21 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
-import { ReactiveFormsModule, FormsModule, FormBuilder, Validators } from '@angular/forms';
-import { map, Observable } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 import { TableModule } from 'primeng/table';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { DialogModule } from 'primeng/dialog';
-import { InputTextModule } from 'primeng/inputtext';
-import { DatePickerModule } from 'primeng/datepicker';
+import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
 
 import { UserTaskStatus } from '../core/models/task-status.enum';
 import { TaskService } from '../core/services/task.service';
 import { AuthService } from '../core/services/auth.service';
-import { Role } from '../core/models/role.enum';
-import { CreateTaskRequest } from '../core/models/create-task-request.model';
-
-import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { CreateTaskModalComponent } from './create-task-modal/create-task-modal.component';
+import { UserTask } from '../core/models/task.model';
+
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-tasks',
@@ -26,18 +23,15 @@ import { CreateTaskModalComponent } from './create-task-modal/create-task-modal.
   imports: [
     CommonModule,
     AsyncPipe,
-    FormsModule,
-    ReactiveFormsModule,
     TableModule,
     SelectModule,
+    FormsModule,
     ButtonModule,
     CardModule,
-    DialogModule,
-    InputTextModule,
-    DatePickerModule,
     DynamicDialogModule,
+    ConfirmDialogModule,
   ],
-  providers: [DialogService],
+  providers: [DialogService, ConfirmationService],
   templateUrl: './tasks.html',
   styleUrl: './tasks.scss',
 })
@@ -45,13 +39,10 @@ export class TasksComponent implements OnInit {
   private taskService = inject(TaskService);
   private authService = inject(AuthService);
   private dialogService = inject(DialogService);
-  private fb = inject(FormBuilder);
+  private confirmationService = inject(ConfirmationService);
 
   readonly tasks$ = this.taskService.tasks$;
-
   readonly isAdmin$ = this.authService.isGlobalAdmin$;
-
-  showDialog = false;
 
   selectedStatus: UserTaskStatus | null = null;
 
@@ -63,41 +54,45 @@ export class TasksComponent implements OnInit {
     { label: 'Cancelled', value: UserTaskStatus.cancelled },
   ];
 
-  taskForm = this.fb.group({
-    name: ['', Validators.required],
-    description: [''],
-    assigneeId: [''],
-    dueDate: [null],
-  });
-
   ngOnInit(): void {
     this.taskService.loadTasks();
   }
 
-  openDialog(): void {
-    this.showDialog = true;
+  openCreateTask(): void {
+    const ref = this.dialogService.open(CreateTaskModalComponent, {
+      header: 'Create Task',
+      width: '450px',
+      modal: true,
+    });
+
+    ref?.onClose.subscribe((createdTask) => {});
   }
 
-  createTask(): void {
-    if (this.taskForm.invalid) {
-      this.taskForm.markAllAsTouched();
-      return;
+  deleteTask(id: string): void {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this task?',
+      header: 'Confirm Delete',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Yes',
+      rejectLabel: 'Cancel',
+
+      accept: () =>{
+      this.taskService.deleteTask(id).subscribe();
     }
+    });
+  }
 
-    const form = this.taskForm.value;
+  openEditTask(task: UserTask): void {
+    const ref = this.dialogService.open(CreateTaskModalComponent, {
+      header: 'Edit Task',
+      width: '450px',
+      modal: true,
+      data: { task },
+    });
+    if(!ref) return;
 
-    const request: CreateTaskRequest = {
-      name: form.name!,
-      description: form.description || undefined,
-      assigneeId: form.assigneeId || undefined,
-      dueDate: form.dueDate ? new Date(form.dueDate).toISOString() : undefined,
-    };
+    ref.onClose.subscribe(updatedTask =>{
 
-    this.taskService.createTask(request).subscribe({
-      next: () => {
-        this.showDialog = false;
-        this.taskForm.reset();
-      },
     });
   }
 
@@ -116,20 +111,5 @@ export class TasksComponent implements OnInit {
     } else {
       table.filter(value, 'status', 'equals');
     }
-  }
-
-  openCreateTask(): void {
-    const ref = this.dialogService.open(CreateTaskModalComponent, {
-      header: 'Create Task',
-      width: '450px',
-      modal: true,
-    });
-
-    if (!ref) return;
-
-    ref.onClose.subscribe((createdTask) => {
-      if (createdTask) {
-      }
-    });
   }
 }

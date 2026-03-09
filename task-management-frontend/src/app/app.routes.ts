@@ -4,6 +4,7 @@ import { roleGuard } from './core/guards/role.guard';
 import { DefaultLayoutComponent } from './layout/default-layout/default-layout.component';
 import { Role } from './core/models/role.enum';
 import { ProfileComponent } from './profile/profile';
+import { DashboardComponent } from './dashboard/dashboard';
 
 export const routes: Routes = [
   {
@@ -23,13 +24,13 @@ export const routes: Routes = [
       {
         path: 'tasks',
         canActivate: [roleGuard],
-        data: {roles : [Role.ADMIN, Role.USER]},
+        data: { roles: [Role.ADMIN, Role.USER] },
         loadChildren: () => import('./tasks/tasks.routes').then((m) => m.tasksRoutes),
       },
       {
         path: 'users',
         canActivate: [roleGuard],
-        data: {roles : [Role.ADMIN]},
+        data: { roles: [Role.ADMIN] },
         loadChildren: () => import('./users/users.routes').then((m) => m.usersRoutes),
       },
       {
