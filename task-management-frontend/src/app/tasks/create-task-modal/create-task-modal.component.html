@@ -7,12 +7,27 @@
 
   <div class="form-field">
     <label>Description</label>
-    <input pInputText formControlName="description" />
+    <textarea
+      pInputText
+      rows="4"
+      maxlength="1000"
+      formControlName="description"
+    ></textarea>
+
+    <small>
+      {{form.get('description')?.value?.length || 0}}/1000
+    </small>
   </div>
 
   <div class="form-field">
     <label>Assign To (User ID)</label>
-    <input pInputText formControlName="assigneeId" />
+    <p-select
+      [options]="users"
+      optionLable="label"
+      optionValue="value"
+      formControlName="assigneeId"
+      placeholder="Select user"
+    ></p-select>
   </div>
 
   <div class="form-field">
@@ -28,7 +43,11 @@
 
   <div class="form-field">
     <label>Due Date</label>
-    <p-datePicker formControlName="dueDate"></p-datePicker>
+    <p-datePicker 
+      formControlName="dueDate"
+      [showIcon]="true"
+      dateFormat="yy-mm-dd"
+    ></p-datePicker>
   </div>
 
   <div class="dialog-actions">

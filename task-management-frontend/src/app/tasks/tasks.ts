@@ -16,6 +16,7 @@ import { UserTask } from '../core/models/task.model';
 
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { UserService } from '../core/services/user.service';
 
 @Component({
   selector: 'app-tasks',
@@ -38,6 +39,7 @@ import { ConfirmationService } from 'primeng/api';
 export class TasksComponent implements OnInit {
   private taskService = inject(TaskService);
   private authService = inject(AuthService);
+  private userService = inject(UserService);
   private dialogService = inject(DialogService);
   private confirmationService = inject(ConfirmationService);
 
@@ -45,6 +47,7 @@ export class TasksComponent implements OnInit {
   readonly isAdmin$ = this.authService.isGlobalAdmin$;
 
   selectedStatus: UserTaskStatus | null = null;
+  usersMap: Record<string, string> = {};
 
   readonly statusOptions = [
     { label: 'All', value: null },
@@ -56,6 +59,12 @@ export class TasksComponent implements OnInit {
 
   ngOnInit(): void {
     this.taskService.loadTasks();
+
+    this.userService.loadUsers().subscribe((users) => {
+      users.forEach((u) => {
+        this.usersMap[u.id] = `${u.firstName} ${u.lastName}`;
+      });
+    });
   }
 
   openCreateTask(): void {
@@ -76,9 +85,9 @@ export class TasksComponent implements OnInit {
       acceptLabel: 'Yes',
       rejectLabel: 'Cancel',
 
-      accept: () =>{
-      this.taskService.deleteTask(id).subscribe();
-    }
+      accept: () => {
+        this.taskService.deleteTask(id).subscribe();
+      },
     });
   }
 
@@ -89,11 +98,9 @@ export class TasksComponent implements OnInit {
       modal: true,
       data: { task },
     });
-    if(!ref) return;
+    if (!ref) return;
 
-    ref.onClose.subscribe(updatedTask =>{
-
-    });
+    ref.onClose.subscribe((updatedTask) => {});
   }
 
   getStatusLabel(status: UserTaskStatus): string {
@@ -111,5 +118,10 @@ export class TasksComponent implements OnInit {
     } else {
       table.filter(value, 'status', 'equals');
     }
+  }
+
+  getAssignedUserName(userId: string | null): string {
+    if(!userId) return 'Unassigned';
+    return this.usersMap[userId] ?? 'Unassigned';
   }
 }

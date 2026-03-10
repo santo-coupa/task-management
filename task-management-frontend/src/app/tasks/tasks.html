@@ -80,7 +80,7 @@
           </td>
 
           @if (isAdmin$ | async) {
-            <td>{{ task.assignedToUserId }}</td>
+            <td>{{ getAssignedUserName(task.assignedToUserId) }}</td>
           }
 
           <td class="actions">

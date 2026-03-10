@@ -65,6 +65,10 @@ export class TaskService {
     );
   }
 
+  getUsers() {
+    return this.http.get<any[]>('http://localhost:5017/users');
+  }
+
   private mapTask(task: TaskResponse): UserTask {
     return {
       id: task.id,

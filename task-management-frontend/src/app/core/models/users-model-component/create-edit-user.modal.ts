@@ -31,7 +31,7 @@ export class CreateEditUserModalComponent implements OnInit {
 
   form = this.fb.group({
     username: ['', Validators.required],
-    email: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
     password: [''],
     firstName: [''],
     lastName: [''],

@@ -10,6 +10,11 @@
     <div class="field">
       <label>Email *</label>
       <input pInputText formControlName="email" />
+      @if (form.get('email')?.invalid && form.get('email')?.touched) {
+        <small>
+          Invalid email format
+        </small>
+      }
     </div>
 
     <div class="field">

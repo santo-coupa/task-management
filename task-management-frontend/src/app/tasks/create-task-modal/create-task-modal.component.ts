@@ -26,10 +26,9 @@ import { UserTaskStatus } from '../../core/models/task-status.enum';
     SelectModule,
   ],
   templateUrl: './create-task-modal.component.html',
-  styleUrl: './create-task-modal.component.scss'
+  styleUrl: './create-task-modal.component.scss',
 })
 export class CreateTaskModalComponent implements OnInit {
-
   private fb = inject(FormBuilder);
   private taskService = inject(TaskService);
   private ref = inject(DynamicDialogRef);
@@ -39,10 +38,10 @@ export class CreateTaskModalComponent implements OnInit {
   isEditMode = false;
 
   readonly statusOptions = [
-    {label: 'Pending', value: UserTaskStatus.pending},
-    {label: 'In Progress', value: UserTaskStatus.inprogress},
-    {label: 'Completed', value: UserTaskStatus.completed},
-    {label: 'Cancelled', value: UserTaskStatus.cancelled},
+    { label: 'Pending', value: UserTaskStatus.pending },
+    { label: 'In Progress', value: UserTaskStatus.inprogress },
+    { label: 'Completed', value: UserTaskStatus.completed },
+    { label: 'Cancelled', value: UserTaskStatus.cancelled },
   ];
 
   form = this.fb.group({
@@ -50,8 +49,10 @@ export class CreateTaskModalComponent implements OnInit {
     description: [''],
     assigneeId: [''],
     status: [UserTaskStatus.pending],
-    dueDate: [null]
+    dueDate: [null],
   });
+
+  users: any[] = [];
 
   ngOnInit(): void {
     this.taskToEdit = this.config.data?.task ?? null;
@@ -63,13 +64,26 @@ export class CreateTaskModalComponent implements OnInit {
         assigneeId: this.taskToEdit.assignedToUserId || '',
         status: this.taskToEdit.status,
         description: '',
-        dueDate: null
+        dueDate: null,
       });
     }
+
+    this.taskService.getUsers().subscribe((users) => {
+      this.users = users
+        .filter((u) => u.isActive)
+        .map((u) => ({
+          label: `${u.firstName} ${u.lastName}`,
+          value: u.id,
+        }));
+
+      this.users.unshift({
+        label: 'Unassigned',
+        value: null,
+      });
+    });
   }
 
   submit(): void {
-
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -78,38 +92,29 @@ export class CreateTaskModalComponent implements OnInit {
     const value = this.form.value;
 
     if (this.isEditMode && this.taskToEdit) {
-
       const updateRequest: UpdateTaskRequest = {
         name: value.name!,
         description: value.description || undefined,
-        assigneeId: value.assigneeId || undefined,
+        assigneeId: value.assigneeId || null,
         status: value.status!,
-        dueDate: value.dueDate
-          ? new Date(value.dueDate).toISOString()
-          : undefined
+        dueDate: value.dueDate ? new Date(value.dueDate).toISOString() : undefined,
       };
 
-      this.taskService.updateTask(this.taskToEdit.id, updateRequest)
-        .subscribe(updated => {
-          this.ref.close(updated);
-        });
-
+      this.taskService.updateTask(this.taskToEdit.id, updateRequest).subscribe((updated) => {
+        this.ref.close(updated);
+      });
     } else {
-
       const createRequest: CreateTaskRequest = {
         name: value.name!,
         description: value.description || undefined,
-        assigneeId: value.assigneeId || undefined,
+        assigneeId: value.assigneeId || null,
         status: value.status!,
-        dueDate: value.dueDate
-          ? new Date(value.dueDate).toISOString()
-          : undefined
+        dueDate: value.dueDate ? new Date(value.dueDate).toISOString() : undefined,
       };
 
-      this.taskService.createTask(createRequest)
-        .subscribe(created => {
-          this.ref.close(created);
-        });
+      this.taskService.createTask(createRequest).subscribe((created) => {
+        this.ref.close(created);
+      });
     }
   }
 
