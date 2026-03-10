@@ -69,13 +69,17 @@ public class TaskService : ITaskService
 
         if (request.AssigneeId.HasValue)
         {
-            var userExists = DbContext.Users
-                .Any(u => u.Id == request.AssigneeId.Value);
+          var userExists = DbContext.Users
+            .Any(u => u.Id == request.AssigneeId.Value);
 
-            if (!userExists)
-                throw new ArgumentException("Assignee not found");
+          if (!userExists)
+            throw new ArgumentException("Assignee not found");
 
-            task.AssigneeId = request.AssigneeId;
+          task.AssigneeId = request.AssigneeId;
+        }
+        else
+        {
+          task.AssigneeId = null;
         }
 
         if (request.DueDate.HasValue)
