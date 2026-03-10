@@ -5,9 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using task_management_backend;
 
-public class CustomWebApplicationFactory
-  : WebApplicationFactory<Program>
+public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
+  private readonly string _dbName = Guid.NewGuid().ToString();
+
   protected override void ConfigureWebHost(IWebHostBuilder builder)
   {
     builder.UseEnvironment("Testing");
@@ -19,7 +20,7 @@ public class CustomWebApplicationFactory
 
       services.AddDbContext<ApplicationDbContext>(options =>
       {
-        options.UseInMemoryDatabase("TestDatabase");
+        options.UseInMemoryDatabase(_dbName);
       });
     });
   }

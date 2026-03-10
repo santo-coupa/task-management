@@ -1,47 +1,14 @@
 using System.Net;
 using System.Net.Http.Json;
-using Microsoft.Extensions.DependencyInjection;
-using task_management_backend;
-using task_management_backend.Database;
 using task_management_backend.Dto.Auth;
-using Xunit;
+using task_management_backend.Tests.Tests;
 
-public class AuthIntegrationTests
+public class AuthIntegrationTests : IntegrationTestBase
 {
-  private readonly HttpClient _client;
-  private readonly ApplicationDbContext _context;
-
-  public AuthIntegrationTests()
-  {
-    var factory = new CustomWebApplicationFactory();
-    _client = factory.CreateClient();
-
-    var scope = factory.Services.CreateScope();
-    _context = scope.ServiceProvider
-      .GetRequiredService<ApplicationDbContext>();
-
-    _context.Database.EnsureCreated();
-  }
-
-  private async Task SeedUser(string username, string password)
-  {
-    var user = new User
-    {
-      Id = Guid.NewGuid(),
-      Username = username,
-      Email = $"{username}@test.com",
-      PasswordHashed = BCrypt.Net.BCrypt.HashPassword(password),
-      CreatedAt = DateTime.UtcNow
-    };
-
-    _context.Users.Add(user);
-    await _context.SaveChangesAsync();
-  }
-
   [Fact]
   public async Task Login_WithValidCredentials_ReturnsToken()
   {
-    await SeedUser("testuser", "password123");
+    await SeedUser("testuser");
 
     var loginRequest = new AuthenticateRequest
     {
@@ -49,11 +16,13 @@ public class AuthIntegrationTests
       Password = "password123"
     };
 
-    var response = await _client.PostAsJsonAsync(
+    var response = await Client.PostAsJsonAsync(
       "/auth/authenticate",
       loginRequest);
 
     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+    Context.ChangeTracker.Clear();
 
     var result = await response.Content
       .ReadFromJsonAsync<AuthenticateResponse>();
@@ -65,7 +34,7 @@ public class AuthIntegrationTests
   [Fact]
   public async Task Login_WithWrongPassword_ReturnsBadRequest()
   {
-    await SeedUser("testuser", "password123");
+    await SeedUser("testuser");
 
     var loginRequest = new AuthenticateRequest
     {
@@ -73,7 +42,7 @@ public class AuthIntegrationTests
       Password = "wrongpassword"
     };
 
-    var response = await _client.PostAsJsonAsync(
+    var response = await Client.PostAsJsonAsync(
       "/auth/authenticate",
       loginRequest);
 
@@ -89,7 +58,7 @@ public class AuthIntegrationTests
       Password = "password123"
     };
 
-    var response = await _client.PostAsJsonAsync(
+    var response = await Client.PostAsJsonAsync(
       "/auth/authenticate",
       loginRequest);
 
