@@ -1,66 +1,102 @@
 <div class="profile-wrapper">
-  <p-card>
-    <h2>My Profile</h2>
 
-    @if (profile) {
-      <div class="profile-grid">
-        <div class="field">
-          <label>Username</label>
-          <span>{{ profile.username }}</span>
-        </div>
+<p-card>
 
-        <div class="field">
-          <label>Email</label>
+<h2>My Profile</h2>
 
-          @if (editMode) {
-            <input pInputText [(ngModel)]="editable.email" />
-          } @else {
-            <span>{{ profile.email }}</span>
-          }
-        </div>
+@if(profile){
 
-        <div class="field">
-          <label>First Name</label>
+<div class="profile-grid">
 
-          @if (editMode) {
-            <input pInputText [(ngModel)]="editable.firstName" />
-          } @else {
-            <span>{{ profile.firstName }}</span>
-          }
-        </div>
+<div class="field">
+<label>Username</label>
+<span>{{profile.username}}</span>
+</div>
 
-        <div class="field">
-          <label>Last Name</label>
+<div class="field">
+<label>Email</label>
 
-          @if (editMode) {
-            <input pInputText [(ngModel)]="editable.lastName" />
-          } @else {
-            <span>{{ profile.lastName }}</span>
-          }
-        </div>
+@if(editMode){
+<input pInputText [(ngModel)]="editable.email">
+}
+@else{
+<span>{{profile.email}}</span>
+}
 
-        <div class="field">
-          <label>Title</label>
+</div>
 
-          @if (editMode) {
-            <input pInputText [(ngModel)]="editable.title" />
-          } @else {
-            <span>{{ profile.title }}</span>
-          }
-        </div>
-      </div>
+<div class="field">
+<label>First Name</label>
 
-      <div class="actions">
-        @if (!editMode) {
-          <button pButton label="Edit Profile" icon="pi pi-pencil" (click)="toggleEdit()"></button>
-        }
+@if(editMode){
+<input pInputText [(ngModel)]="editable.firstName">
+}
+@else{
+<span>{{profile.firstName}}</span>
+}
 
-        @if (editMode) {
-          <button pButton label="Save" icon="pi pi-check" (click)="save()"></button>
+</div>
 
-          <button pButton label="Cancel" class="p-button-secondary" (click)="toggleEdit()"></button>
-        }
-      </div>
-    }
-  </p-card>
+<div class="field">
+<label>Last Name</label>
+
+@if(editMode){
+<input pInputText [(ngModel)]="editable.lastName">
+}
+@else{
+<span>{{profile.lastName}}</span>
+}
+
+</div>
+
+<div class="field">
+<label>Title</label>
+
+@if(editMode){
+<input pInputText [(ngModel)]="editable.title">
+}
+@else{
+<span>{{profile.title}}</span>
+}
+
+</div>
+
+@if(editMode){
+
+<div class="field">
+<label>New Password</label>
+<p-password [(ngModel)]="editable.password" toggleMask></p-password>
+</div>
+
+<div class="field">
+<label>Confirm Password</label>
+<p-password [(ngModel)]="editable.confirmPassword" toggleMask></p-password>
+</div>
+
+}
+
+</div>
+
+@if(errorMessage){
+<p class="error">{{errorMessage}}</p>
+}
+
+<div class="actions">
+
+@if(!editMode){
+<button pButton label="Edit Profile" icon="pi pi-pencil" (click)="toggleEdit()"></button>
+}
+
+@if(editMode){
+<button pButton label="Save" icon="pi pi-check" (click)="save()"></button>
+
+<button pButton label="Cancel" class="p-button-secondary" (click)="toggleEdit()"></button>
+}
+
+</div>
+
+}
+
+</p-card>
+
 </div>
