@@ -1,3 +1,4 @@
+using task_management_backend.Dto.Auth;
 using task_management_backend.Tests.Tests;
 
 namespace task_management_backend.Tests;
@@ -150,10 +151,9 @@ public class UsersIntegrationTests : IntegrationTestBase
     };
 
     var loginResponse = await Client.PostAsJsonAsync("/auth/authenticate", loginRequest);
-    var result = await loginResponse.Content.ReadFromJsonAsync<dynamic>();
+    var result = await loginResponse.Content.ReadFromJsonAsync<AuthenticateResponse>();
 
-    Client.DefaultRequestHeaders.Authorization =
-      new AuthenticationHeaderValue("Bearer", result.token.ToString());
+    AttachToken(result!.Token);
 
     var response = await Client.DeleteAsync($"/users/{admin.Id}");
 
