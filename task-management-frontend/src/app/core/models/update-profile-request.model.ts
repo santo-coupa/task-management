@@ -4,4 +4,5 @@ export interface UpdateProfileRequest {
   email?: string;
   title?: string;
   password?: string;
+  confirmPassword?: string;
 }

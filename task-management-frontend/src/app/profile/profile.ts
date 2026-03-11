@@ -23,12 +23,15 @@ export class ProfileComponent implements OnInit {
 
   editMode = false;
 
+  errorMessage = '';
+
   editable = {
     firstName: '',
     lastName: '',
     email: '',
     title: '',
     password: '',
+    confirmPassword: ''
   };
 
   ngOnInit(): void {
@@ -47,9 +50,13 @@ export class ProfileComponent implements OnInit {
 
   toggleEdit(): void {
     this.editMode = !this.editMode;
+    this.errorMessage = '';
   }
 
   save(): void {
+    if (this.editable.password !== this.editable.confirmPassword) {
+      this.errorMessage = 'Passwords do not mathch';
+    }
     const request: UpdateProfileRequest = {
       firstName: this.editable.firstName,
       lastName: this.editable.lastName,
@@ -61,6 +68,7 @@ export class ProfileComponent implements OnInit {
     this.profileService.updateProfile(request).subscribe((updated) => {
       this.profile = updated;
       this.editMode = false;
+      this.errorMessage = '';
     });
   }
 }
