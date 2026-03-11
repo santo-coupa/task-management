@@ -45,11 +45,8 @@ public class ProfileService : IProfileService
       user.Title = request.Title;
 
     if(!string.IsNullOrWhiteSpace(request.Password))
-    {
-      if(request.Password != request.ConfirmPassword)
-        throw new ArgumentException("Passwords do not match");
-      user.PasswordHashed = BCrypt.Net.BCrypt.HashPassword(request.Password);
-    }
+      user.PasswordHashed =
+        BCrypt.Net.BCrypt.HashPassword(request.Password);
 
     user.UpdatedAt = DateTime.Now;
     DbContext.SaveChanges();
