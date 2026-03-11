@@ -32,16 +32,16 @@ public class ProfileService : IProfileService
     if(user == null)
       throw new ArgumentException("User not found");
 
-    if(request.FirstName != user.FirstName)
+    if(!string.IsNullOrWhiteSpace(request.FirstName))
       user.FirstName = request.FirstName;
 
-    if(request.LastName != user.LastName)
+    if(!string.IsNullOrWhiteSpace(request.LastName))
       user.LastName = request.LastName;
 
-    if(request.Email != user.Email)
+    if(!string.IsNullOrWhiteSpace(request.Email))
       user.Email = request.Email;
 
-    if(request.Title != user.Title)
+    if(!string.IsNullOrWhiteSpace(request.Title))
       user.Title = request.Title;
 
     if(!string.IsNullOrWhiteSpace(request.Password))
@@ -49,7 +49,9 @@ public class ProfileService : IProfileService
         BCrypt.Net.BCrypt.HashPassword(request.Password);
 
     user.UpdatedAt = DateTime.Now;
+
     DbContext.SaveChanges();
+
     return MaptoGetProfileResponse(user);
   }
 
