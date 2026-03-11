@@ -10,10 +10,10 @@ namespace task_management_backend.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class ProfileControllers : ControllerBase
+public class ProfileController : ControllerBase
 {
   private readonly IProfileService ProfileService;
-  public ProfileControllers(IProfileService profileService)
+  public ProfileController(IProfileService profileService)
   {
     ProfileService = profileService;
   }
