@@ -1,14 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
+
+import { Observable, tap } from 'rxjs';
+
 import { ProfileService } from '../core/services/profile.services';
 import { Profile } from '../core/models/profile.model';
 import { UpdateProfileRequest } from '../core/models/update-profile-request.model';
-import { PasswordModule } from 'primeng/password';
 
 @Component({
   selector: 'app-profile',
@@ -17,13 +20,10 @@ import { PasswordModule } from 'primeng/password';
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent {
   private profileService = inject(ProfileService);
 
-  profile: Profile | null = null;
-
   editMode = false;
-
   errorMessage = '';
 
   editable = {
@@ -35,19 +35,14 @@ export class ProfileComponent implements OnInit {
     confirmPassword: '',
   };
 
-  ngOnInit(): void {
-    this.loadProfile();
-  }
-
-  loadProfile() {
-    this.profileService.getProfile().subscribe((profile) => {
-      this.profile = profile;
+  profile$: Observable<Profile> = this.profileService.getProfile().pipe(
+    tap((profile) => {
       this.editable.firstName = profile.firstName ?? '';
       this.editable.lastName = profile.lastName ?? '';
       this.editable.email = profile.email;
       this.editable.title = profile.title ?? '';
-    });
-  }
+    }),
+  );
 
   toggleEdit(): void {
     this.editMode = !this.editMode;
@@ -56,8 +51,10 @@ export class ProfileComponent implements OnInit {
 
   save(): void {
     if (this.editable.password !== this.editable.confirmPassword) {
-      this.errorMessage = 'Passwords do not mathch';
+      this.errorMessage = 'Passwords do not match';
+      return;
     }
+
     const request: UpdateProfileRequest = {
       firstName: this.editable.firstName,
       lastName: this.editable.lastName,
@@ -66,10 +63,10 @@ export class ProfileComponent implements OnInit {
       password: this.editable.password || undefined,
     };
 
-    this.profileService.updateProfile(request).subscribe((updated) => {
-      this.profile = updated;
+    this.profileService.updateProfile(request).subscribe(() => {
       this.editMode = false;
-      this.errorMessage = '';
+      this.editable.password = '';
+      this.editable.confirmPassword = '';
     });
   }
 }
