@@ -8,11 +8,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ProfileService } from '../core/services/profile.services';
 import { Profile } from '../core/models/profile.model';
 import { UpdateProfileRequest } from '../core/models/update-profile-request.model';
+import { PasswordModule } from 'primeng/password';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardModule, ButtonModule, InputTextModule],
+  imports: [CommonModule, FormsModule, CardModule, ButtonModule, InputTextModule, PasswordModule],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })
@@ -31,7 +32,7 @@ export class ProfileComponent implements OnInit {
     email: '',
     title: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   };
 
   ngOnInit(): void {
