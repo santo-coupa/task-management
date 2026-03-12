@@ -19,7 +19,7 @@ export class ProfileService {
     return this.http.patch<Profile>(this.API, request);
   }
 
-  updatePassword(request: any) {
-    return this.http.patch('/profile/password', request);
+  updatePassword(request: { currentPassword: string; newPassword: string }) {
+    return this.http.patch(`${this.API}/password`, request);
   }
 }

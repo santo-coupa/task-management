@@ -10,6 +10,7 @@ import { BehaviorSubject, switchMap, tap } from 'rxjs';
 
 import { ProfileService } from '../core/services/profile.services';
 import { UpdateProfileRequest } from '../core/models/update-profile-request.model';
+import { AuthService } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -20,6 +21,7 @@ import { UpdateProfileRequest } from '../core/models/update-profile-request.mode
 })
 export class ProfileComponent {
   private profileService = inject(ProfileService);
+  private authService = inject(AuthService);
 
   private refresh$ = new BehaviorSubject<void>(undefined);
 
@@ -40,6 +42,17 @@ export class ProfileComponent {
       this.editable.lastName = profile.lastName ?? '';
       this.editable.email = profile.email;
       this.editable.title = profile.title ?? '';
+
+      const currentUser = this.authService.getUser();
+
+      if (currentUser) {
+        this.authService.updateUser({
+          ...currentUser,
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          email: profile.email,
+        });
+      }
     }),
   );
 

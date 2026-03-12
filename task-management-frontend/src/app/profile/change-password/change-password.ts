@@ -27,6 +27,11 @@ export class ChangePasswordComponent {
   errorMessage = '';
 
   updatePassword(): void {
+    if (!this.currentPassword || !this.newPassword) {
+      this.errorMessage = 'All fields are required';
+      return;
+    }
+
     if (this.newPassword !== this.confirmPassword) {
       this.errorMessage = 'Passwords do not match';
       return;
