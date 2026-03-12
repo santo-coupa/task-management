@@ -48,7 +48,7 @@ public class ProfileService : IProfileService
       user.PasswordHashed =
         BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-    user.UpdatedAt = DateTime.Now;
+    user.UpdatedAt = DateTime.UtcNow;
 
     DbContext.SaveChanges();
 
