@@ -18,4 +18,8 @@ export class ProfileService {
   updateProfile(request: UpdateProfileRequest): Observable<Profile> {
     return this.http.patch<Profile>(this.API, request);
   }
+
+  updatePassword(request: any) {
+    return this.http.patch('/profile/password', request);
+  }
 }

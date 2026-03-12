@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
 
 import { BehaviorSubject, switchMap, tap } from 'rxjs';
 
@@ -15,7 +14,7 @@ import { UpdateProfileRequest } from '../core/models/update-profile-request.mode
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardModule, ButtonModule, InputTextModule, PasswordModule],
+  imports: [CommonModule, FormsModule, CardModule, ButtonModule, InputTextModule],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })
@@ -32,8 +31,6 @@ export class ProfileComponent {
     lastName: '',
     email: '',
     title: '',
-    password: '',
-    confirmPassword: '',
   };
 
   profile$ = this.refresh$.pipe(
@@ -52,23 +49,15 @@ export class ProfileComponent {
   }
 
   save(): void {
-    if (this.editable.password !== this.editable.confirmPassword) {
-      this.errorMessage = 'Passwords do not match';
-      return;
-    }
-
     const request: UpdateProfileRequest = {
       firstName: this.editable.firstName,
       lastName: this.editable.lastName,
       email: this.editable.email,
       title: this.editable.title,
-      password: this.editable.password || undefined,
     };
 
     this.profileService.updateProfile(request).subscribe(() => {
       this.editMode = false;
-      this.editable.password = '';
-      this.editable.confirmPassword = '';
       this.refresh$.next();
     });
   }

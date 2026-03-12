@@ -1,9 +1,14 @@
-import { Routes } from "@angular/router";
-import { ProfileComponent } from "./profile";
+import { Routes } from '@angular/router'
+import { ProfileComponent } from './profile'
+import { ChangePasswordComponent } from './change-password/change-password'
 
-export const profileRoutes : Routes = [
+export const profileRoutes: Routes = [
   {
     path: '',
-    component: ProfileComponent,
+    component: ProfileComponent
+  },
+  {
+    path: 'password',
+    component: ChangePasswordComponent
   }
 ]
