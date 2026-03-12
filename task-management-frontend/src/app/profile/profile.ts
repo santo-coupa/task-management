@@ -7,10 +7,9 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, switchMap, tap } from 'rxjs';
 
 import { ProfileService } from '../core/services/profile.services';
-import { Profile } from '../core/models/profile.model';
 import { UpdateProfileRequest } from '../core/models/update-profile-request.model';
 
 @Component({
@@ -22,6 +21,8 @@ import { UpdateProfileRequest } from '../core/models/update-profile-request.mode
 })
 export class ProfileComponent {
   private profileService = inject(ProfileService);
+
+  private refresh$ = new BehaviorSubject<void>(undefined);
 
   editMode = false;
   errorMessage = '';
@@ -35,7 +36,8 @@ export class ProfileComponent {
     confirmPassword: '',
   };
 
-  profile$: Observable<Profile> = this.profileService.getProfile().pipe(
+  profile$ = this.refresh$.pipe(
+    switchMap(() => this.profileService.getProfile()),
     tap((profile) => {
       this.editable.firstName = profile.firstName ?? '';
       this.editable.lastName = profile.lastName ?? '';
@@ -67,6 +69,7 @@ export class ProfileComponent {
       this.editMode = false;
       this.editable.password = '';
       this.editable.confirmPassword = '';
+      this.refresh$.next();
     });
   }
 }
