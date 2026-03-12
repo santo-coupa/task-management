@@ -1,25 +1,21 @@
-<p-menubar [model]="menuItems">
-  <ng-template pTemplate="end">
-    <div
-      class="profile"
-      (click)="profileMenu.toggle($event)"
-    >
-      <div class="avatar">
-        {{ userInitial }}
-      </div>
+@if (menuItems$ | async; as menuItems) {
+  <p-menubar [model]="menuItems">
+    <ng-template pTemplate="end">
+      @if (user$ | async; as user) {
+        <p-menu #profileMenu [model]="profileItems" [popup]="true"></p-menu>
 
-      <span class="name">
-        {{ displayName }}
-      </span>
+        <div class="profile-container" (click)="profileMenu.toggle($event)">
+          <div class="avatar">
+            {{ getDisplayName(user).charAt(0).toUpperCase() }}
+          </div>
 
-      <i class="pi pi-angle-down chevron"></i>
-    </div>
+          <span class="username">
+            {{ getDisplayName(user) }}
+          </span>
 
-    <p-menu
-      #profileMenu
-      [popup]="true"
-      [model]="profileItems"
-      appendTo="body"
-    ></p-menu>
-  </ng-template>
-</p-menubar>
+          <i class="pi pi-chevron-down"></i>
+        </div>
+      }
+    </ng-template>
+  </p-menubar>
+}

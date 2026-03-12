@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -8,7 +8,7 @@ import { MenuItem } from 'primeng/api';
 
 import { AuthService } from '../../core/services/auth.service';
 import { Role } from '../../core/models/role.enum';
-import { User } from '../../core/models/user.model';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -17,70 +17,59 @@ import { User } from '../../core/models/user.model';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  menuItems: MenuItem[] = [];
-  profileItems: MenuItem[] = [];
+  readonly user$ = this.authService.user$;
 
-  displayName = '';
-  userInitial = '';
+  readonly menuItems$ = this.user$.pipe(
+    map((user) => {
+      const items: MenuItem[] = [
+        { label: 'Dashboard', routerLink: '/dashboard' },
+        { label: 'Tasks', routerLink: '/tasks' },
+      ];
 
-  private currentUser: User | null = null;
+      if (user?.role === Role.ADMIN) {
+        items.push({
+          label: 'Users',
+          routerLink: '/users',
+        });
+      }
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+      return items;
+    }),
+  );
 
-  ngOnInit(): void {
-    this.currentUser = this.authService.getUser();
-
-    const email = this.currentUser?.email ?? 'User';
-    this.displayName = email.split('@')[0];
-    this.userInitial = this.displayName.charAt(0).toUpperCase();
-
-    this.buildMenu();
-    this.buildProfileMenu();
-  }
-
-  private buildMenu(): void {
-    this.menuItems = [
-      { label: 'Dashboard', routerLink: '/dashboard' },
-      { label: 'Tasks', routerLink: '/tasks' },
-    ];
-
-    if (this.currentUser?.role === Role.ADMIN) {
-      this.menuItems.push({
-        label: 'Users',
-        routerLink: '/users',
-      });
-    }
-  }
-
-  private buildProfileMenu(): void {
-    const email = this.currentUser?.email ?? 'User';
-
-    this.profileItems = [
-      {
-        label: email,
-        disabled: true,
-      },
-      { separator: true },
-      {
-        label: 'My Profile',
-        icon: 'pi pi-user',
-        command: () => this.router.navigate(['/profile']),
-      },
-      {
-        label: 'Logout',
-        icon: 'pi pi-sign-out',
-        command: () => this.logout(),
-      },
-    ];
-  }
+  readonly profileItems: MenuItem[] = [
+    {
+      label: 'My Profile',
+      icon: 'pi pi-user',
+      command: () => this.router.navigate(['/profile']),
+    },
+    {
+      label: 'Change Password',
+      icon: 'pi pi-lock',
+      command: () => this.router.navigate(['/profile/password']),
+    },
+    { separator: true },
+    {
+      label: 'Logout',
+      icon: 'pi pi-sign-out',
+      command: () => this.logout(),
+    },
+  ];
 
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
+  }
+
+  getDisplayName(user: any): string {
+    if (user?.firstName || user?.lastName) {
+      return `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim();
+    }
+
+    return user?.username ?? 'User';
   }
 }
