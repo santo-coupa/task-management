@@ -37,6 +37,16 @@ public class ProfileController : ControllerBase
     return Ok(profile);
   }
 
+  [HttpPatch("password")]
+  public IActionResult ChangePassword(ChangePasswordRequest request)
+  {
+    var userId = GetUseridFromClaims();
+
+    ProfileService.ChangePassword(userId, request);
+
+    return Ok();
+  }
+
   private Guid GetUseridFromClaims()
   {
     var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

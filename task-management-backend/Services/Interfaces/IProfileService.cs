@@ -6,4 +6,5 @@ public interface IProfileService
 {
   GetProfileResponse GetProfiles(Guid userId);
   GetProfileResponse UpdateProfile(Guid userId, UpdateProfileRequest request);
+  void ChangePassword(Guid userId, ChangePasswordRequest request);
 }

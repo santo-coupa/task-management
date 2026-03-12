@@ -44,15 +44,34 @@ public class ProfileService : IProfileService
     if(!string.IsNullOrWhiteSpace(request.Title))
       user.Title = request.Title;
 
-    if(!string.IsNullOrWhiteSpace(request.Password))
-      user.PasswordHashed =
-        BCrypt.Net.BCrypt.HashPassword(request.Password);
-
     user.UpdatedAt = DateTime.UtcNow;
 
     DbContext.SaveChanges();
 
     return MaptoGetProfileResponse(user);
+  }
+
+  public void ChangePassword(Guid userId, ChangePasswordRequest request)
+  {
+    var user = DbContext.Users
+      .FirstOrDefault(u => u.Id == userId);
+
+    if (user == null)
+      throw new ArgumentException("User not found");
+
+    var isValid = BCrypt.Net.BCrypt.Verify(
+      request.CurrentPassword,
+      user.PasswordHashed
+    );
+
+    if (!isValid)
+      throw new ArgumentException("Current password is incorrect");
+
+    user.PasswordHashed = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+
+    user.UpdatedAt = DateTime.UtcNow;
+
+    DbContext.SaveChanges();
   }
 
   private static GetProfileResponse MaptoGetProfileResponse(User user)
