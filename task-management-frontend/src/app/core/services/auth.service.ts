@@ -9,7 +9,6 @@ import { Role } from '../models/role.enum';
   providedIn: 'root',
 })
 export class AuthService {
-
   private readonly API_URL = 'http://localhost:5017/auth/authenticate';
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
@@ -19,34 +18,36 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
 
-  readonly isGlobalAdmin$ = this.user$.pipe(
-    map(user => user?.role === Role.ADMIN)
-  );
+  readonly isGlobalAdmin$ = this.user$.pipe(map((user) => user?.role === Role.ADMIN));
 
   constructor(private http: HttpClient) {
     this.restoreSession();
   }
 
   login(username: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(this.API_URL, {
-      username,
-      password,
-    }).pipe(
-      tap((response) => {
-
-        const user: User = {
-          id: response.username,
-          email: response.email,
-          role: response.role,
-        };
-
-        this.token = response.token;
-        this.userSubject.next(user);
-
-        localStorage.setItem(this.TOKEN_KEY, this.token);
-        localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    return this.http
+      .post<AuthResponse>(this.API_URL, {
+        username,
+        password,
       })
-    );
+      .pipe(
+        tap((response) => {
+          const user: User = {
+            id: response.id,
+            username: response.username,
+            email: response.email,
+            role: response.role,
+            firstName: response.firstName,
+            lastName: response.lastName,
+          };
+
+          this.token = response.token;
+          this.userSubject.next(user);
+
+          localStorage.setItem(this.TOKEN_KEY, this.token);
+          localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+        }),
+      );
   }
 
   logout(): void {

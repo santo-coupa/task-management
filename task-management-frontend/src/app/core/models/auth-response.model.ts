@@ -1,8 +1,11 @@
-import { Role } from "./role.enum";
+import { Role } from './role.enum';
 
 export interface AuthResponse {
-  token: string;
+  id: string;
   username: string;
   email: string;
+  firstName?: string;
+  lastName?: string;
   role: Role;
+  token: string;
 }

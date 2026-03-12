@@ -48,30 +48,6 @@
             <span class="value">{{ profile.title }}</span>
           }
         </div>
-
-        @if (editMode) {
-          <div class="field">
-            <label>New Password</label>
-            <p-password
-              [(ngModel)]="editable.password"
-              toggleMask
-              [feedback]="false"
-              styleClass="input"
-            >
-            </p-password>
-          </div>
-
-          <div class="field">
-            <label>Confirm Password</label>
-            <p-password
-              [(ngModel)]="editable.confirmPassword"
-              toggleMask
-              [feedback]="false"
-              styleClass="input"
-            >
-            </p-password>
-          </div>
-        }
       </div>
 
       @if (errorMessage) {
