@@ -1,10 +1,17 @@
-@import "primeicons/primeicons.css";
+@import 'primeicons/primeicons.css';
 
 body {
   margin: 0;
-  font-family: Inter, system-ui, sans-serif;
-  background: linear-gradient(180deg, #0f172a, #020617);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    sans-serif;
+
+  background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+
   min-height: 100vh;
+  color: #e5e7eb;
 }
 
 .page-container {
@@ -13,3 +20,30 @@ body {
   padding: 28px 24px;
 }
 
+.table-container {
+  margin-top: 20px;
+}
+
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.search-box {
+  position: relative;
+}
+
+.search-box input {
+  padding-left: 32px;
+}
+
+.search-box i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.6;
+}

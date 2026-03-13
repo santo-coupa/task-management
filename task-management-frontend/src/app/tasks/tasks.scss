@@ -88,3 +88,39 @@
   gap: 0.75rem;
   margin-top: 1rem;
 }
+
+.p-datatable {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.p-datatable-header {
+  background: transparent;
+}
+
+.p-datatable-thead > tr > th {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.p-datatable-tbody > tr:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.p-datatable {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.p-datatable-header {
+  background: transparent;
+}
+
+.p-datatable-thead > tr > th {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.p-datatable-tbody > tr:hover {
+  background: rgba(255, 255, 255, 0.04);
+}

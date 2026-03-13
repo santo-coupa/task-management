@@ -1,63 +1,65 @@
-<div class="dashboard-wrapper">
-  @if (vm$ | async; as vm) {
-    <div class="stats-grid">
-      <div class="stat-card">
-        <h3>Total Tasks</h3>
-        <p>{{ vm.totalTasks }}</p>
+<div class="page-container">
+  <div class="dashboard-wrapper">
+    @if (vm$ | async; as vm) {
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Tasks</h3>
+          <p>{{ vm.totalTasks }}</p>
+        </div>
+
+        <div class="stat-card">
+          <h3>Pending</h3>
+          <p>{{ vm.pendingTasks }}</p>
+        </div>
+
+        <div class="stat-card">
+          <h3>In Progress</h3>
+          <p>{{ vm.inProgressTasks }}</p>
+        </div>
+
+        <div class="stat-card">
+          <h3>Completed</h3>
+          <p>{{ vm.completedTasks }}</p>
+        </div>
+
+        <div class="stat-card">
+          <h3>Cancelled</h3>
+          <p>{{ vm.cancelledTasks }}</p>
+        </div>
       </div>
 
-      <div class="stat-card">
-        <h3>Pending</h3>
-        <p>{{ vm.pendingTasks }}</p>
-      </div>
+      <div class="dashboard-content">
+        <div class="chart-container">
+          <p-chart
+            type="pie"
+            [data]="{
+              labels: ['Pending', 'In Progress', 'Completed', 'Cancelled'],
+              datasets: [
+                {
+                  data: [vm.pendingTasks, vm.inProgressTasks, vm.completedTasks, vm.cancelledTasks],
+                  backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#ef4444'],
+                  borderWidth: 0,
+                },
+              ],
+            }"
+          ></p-chart>
+        </div>
 
-      <div class="stat-card">
-        <h3>In Progress</h3>
-        <p>{{ vm.inProgressTasks }}</p>
-      </div>
+        <div class="recent-tasks">
+          <h3>Recent Tasks</h3>
 
-      <div class="stat-card">
-        <h3>Completed</h3>
-        <p>{{ vm.completedTasks }}</p>
+          <ul>
+            @for (task of vm.recentTasks; track task.id) {
+              <li>
+                {{ task.title }}
+                <span class="status-badge status-{{ getStatusLabel(task.status) }}">
+                  {{ getStatusLabel(task.status) }}
+                </span>
+              </li>
+            }
+          </ul>
+        </div>
       </div>
-
-      <div class="stat-card">
-        <h3>Cancelled</h3>
-        <p>{{ vm.cancelledTasks }}</p>
-      </div>
-    </div>
-
-    <div class="dashboard-content">
-      <div class="chart-container">
-        <p-chart
-          type="pie"
-          [data]="{
-            labels: ['Pending', 'In Progress', 'Completed', 'Cancelled'],
-            datasets: [
-              {
-                data: [vm.pendingTasks, vm.inProgressTasks, vm.completedTasks, vm.cancelledTasks],
-                backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#ef4444'],
-                borderWidth: 0,
-              },
-            ],
-          }"
-        ></p-chart>
-      </div>
-
-      <div class="recent-tasks">
-        <h3>Recent Tasks</h3>
-
-        <ul>
-          @for (task of vm.recentTasks; track task.id) {
-            <li>
-              {{ task.title }}
-              <span class="status-badge status-{{ getStatusLabel(task.status) }}">
-                {{ getStatusLabel(task.status) }}
-              </span>
-            </li>
-          }
-        </ul>
-      </div>
-    </div>
-  }
+    }
+  </div>
 </div>

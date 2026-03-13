@@ -1,70 +1,82 @@
-<div class="profile-wrapper">
-  <p-card>
-    <h2 class="title">My Profile</h2>
+<div class="page-container">
+  <div class="profile-wrapper">
+    <p-card>
+      <h2 class="title">My Profile</h2>
 
-    @if (profile$ | async; as profile) {
-      <div class="profile-grid">
-        <div class="field">
-          <label>Username</label>
-          <span class="value">{{ profile.username }}</span>
+      @if (profile$ | async; as profile) {
+        <div class="profile-grid">
+          <div class="field">
+            <label>Username</label>
+            <span class="value">{{ profile.username }}</span>
+          </div>
+
+          <div class="field">
+            <label>Email</label>
+
+            @if (editMode) {
+              <input pInputText [(ngModel)]="editable.email" class="input" />
+            } @else {
+              <span class="value">{{ profile.email }}</span>
+            }
+          </div>
+
+          <div class="field">
+            <label>First Name</label>
+
+            @if (editMode) {
+              <input pInputText [(ngModel)]="editable.firstName" class="input" />
+            } @else {
+              <span class="value">{{ profile.firstName }}</span>
+            }
+          </div>
+
+          <div class="field">
+            <label>Last Name</label>
+
+            @if (editMode) {
+              <input pInputText [(ngModel)]="editable.lastName" class="input" />
+            } @else {
+              <span class="value">{{ profile.lastName }}</span>
+            }
+          </div>
+
+          <div class="field">
+            <label>Title</label>
+
+            @if (editMode) {
+              <input pInputText [(ngModel)]="editable.title" class="input" />
+            } @else {
+              <span class="value">{{ profile.title }}</span>
+            }
+          </div>
         </div>
 
-        <div class="field">
-          <label>Email</label>
+        @if (errorMessage) {
+          <p class="error">{{ errorMessage }}</p>
+        }
+
+        <div class="actions">
+          @if (!editMode) {
+            <button
+              pButton
+              label="Edit Profile"
+              icon="pi pi-pencil"
+              (click)="toggleEdit()"
+            ></button>
+          }
 
           @if (editMode) {
-            <input pInputText [(ngModel)]="editable.email" class="input" />
-          } @else {
-            <span class="value">{{ profile.email }}</span>
+            <button pButton label="Save" icon="pi pi-check" (click)="save()"></button>
+
+            <button
+              pButton
+              label="Cancel"
+              class="p-button-secondary"
+              (click)="toggleEdit()"
+            ></button>
           }
         </div>
-
-        <div class="field">
-          <label>First Name</label>
-
-          @if (editMode) {
-            <input pInputText [(ngModel)]="editable.firstName" class="input" />
-          } @else {
-            <span class="value">{{ profile.firstName }}</span>
-          }
-        </div>
-
-        <div class="field">
-          <label>Last Name</label>
-
-          @if (editMode) {
-            <input pInputText [(ngModel)]="editable.lastName" class="input" />
-          } @else {
-            <span class="value">{{ profile.lastName }}</span>
-          }
-        </div>
-
-        <div class="field">
-          <label>Title</label>
-
-          @if (editMode) {
-            <input pInputText [(ngModel)]="editable.title" class="input" />
-          } @else {
-            <span class="value">{{ profile.title }}</span>
-          }
-        </div>
-      </div>
-
-      @if (errorMessage) {
-        <p class="error">{{ errorMessage }}</p>
       }
-
-      <div class="actions">
-        @if (!editMode) {
-          <button pButton label="Edit Profile" icon="pi pi-pencil" (click)="toggleEdit()"></button>
-        }
-
-        @if (editMode) {
-          <button pButton label="Save" icon="pi pi-check" (click)="save()"></button>
-
-          <button pButton label="Cancel" class="p-button-secondary" (click)="toggleEdit()"></button>
-        }
-      </div>
-    }
-  </p-card>
+    </p-card>
+  </div>
 </div>

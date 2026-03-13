@@ -1,55 +1,48 @@
-<div class="login-wrapper">
-  <p-card header="Login to Task Manager" class="login-card">
+<div class="page-container">
+  <div class="login-wrapper">
+    <p-card header="Login to Task Manager" class="login-card">
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <div class="field">
+          <label>Username</label>
+          <input pInputText formControlName="username" class="w-full" />
 
-    <form [formGroup]="loginForm" (ngSubmit)="login()">
-
-      <div class="field">
-        <label>Username</label>
-        <input
-          pInputText
-          formControlName="username"
-          class="w-full"
-        />
-
-        @if (loginForm.get('username')?.touched && loginForm.get('username')?.invalid) {
-          <small class="error">Username is required</small>
-        }
-      </div>
-
-      <div class="field">
-        <label>Password</label>
-        <input
-          type="password"
-          pInputText
-          formControlName="password"
-          class="w-full"
-        />
-
-        @if (loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']) {
-          <small class="error">Password is required</small>
-        }
-
-        @if (loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['minlength']) {
-          <small class="error">Minimum 6 characters required</small>
-        }
-      </div>
-
-      @if (errorMessage) {
-        <div class="server-error">
-          {{ errorMessage }}
+          @if (loginForm.get('username')?.touched && loginForm.get('username')?.invalid) {
+            <small class="error">Username is required</small>
+          }
         </div>
-      }
 
-      <button
-        pButton
-        type="submit"
-        label="Login"
-        icon="pi pi-sign-in"
-        [loading]="loading"
-        class="w-full"
-      ></button>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" pInputText formControlName="password" class="w-full" />
 
-    </form>
+          @if (
+            loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']
+          ) {
+            <small class="error">Password is required</small>
+          }
 
-  </p-card>
+          @if (
+            loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['minlength']
+          ) {
+            <small class="error">Minimum 6 characters required</small>
+          }
+        </div>
+
+        @if (errorMessage) {
+          <div class="server-error">
+            {{ errorMessage }}
+          </div>
+        }
+
+        <button
+          pButton
+          type="submit"
+          label="Login"
+          icon="pi pi-sign-in"
+          [loading]="loading"
+          class="w-full"
+        ></button>
+      </form>
+    </p-card>
+  </div>
 </div>
