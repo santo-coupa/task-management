@@ -1,48 +1,65 @@
 <div class="page-container">
-  <div class="login-wrapper">
-    <p-card header="Login to Task Manager" class="login-card">
-      <form [formGroup]="loginForm" (ngSubmit)="login()">
-        <div class="field">
-          <label>Username</label>
-          <input pInputText formControlName="username" class="w-full" />
+  <div class="login-layout">
+    <div class="welcome-section">
+      <h1>Welcome to Task Manager</h1>
 
-          @if (loginForm.get('username')?.touched && loginForm.get('username')?.invalid) {
-            <small class="error">Username is required</small>
-          }
-        </div>
+      <p class="subtitle">A complete platform for managing your team's tasks efficiently.</p>
 
-        <div class="field">
-          <label>Password</label>
-          <input type="password" pInputText formControlName="password" class="w-full" />
+      <p>
+        Plan, organize, and track your work in one place. Collaborate with your team, monitor
+        progress, and stay productive with a simple and powerful task management system.
+      </p>
 
-          @if (
-            loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']
-          ) {
-            <small class="error">Password is required</small>
-          }
+      <p class="quote">
+        “Productivity is never an accident. It is always the result of commitment to excellence.”
+      </p>
+    </div>
 
-          @if (
-            loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['minlength']
-          ) {
-            <small class="error">Minimum 6 characters required</small>
-          }
-        </div>
+    <div class="login-wrapper">
+      <p-card header="Login to Task Manager" class="login-card">
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+          <div class="field">
+            <label>Username</label>
+            <input pInputText formControlName="username" class="w-full" />
 
-        @if (errorMessage) {
-          <div class="server-error">
-            {{ errorMessage }}
+            @if (loginForm.get('username')?.touched && loginForm.get('username')?.invalid) {
+              <small class="error">Username is required</small>
+            }
           </div>
-        }
 
-        <button
-          pButton
-          type="submit"
-          label="Login"
-          icon="pi pi-sign-in"
-          [loading]="loading"
-          class="w-full"
-        ></button>
-      </form>
-    </p-card>
+          <div class="field">
+            <label>Password</label>
+            <input type="password" pInputText formControlName="password" class="w-full" />
+
+            @if (
+              loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']
+            ) {
+              <small class="error">Password is required</small>
+            }
+
+            @if (
+              loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['minlength']
+            ) {
+              <small class="error">Minimum 6 characters required</small>
+            }
+          </div>
+
+          @if (errorMessage) {
+            <div class="server-error">
+              {{ errorMessage }}
+            </div>
+          }
+
+          <button
+            pButton
+            type="submit"
+            label="Login"
+            icon="pi pi-sign-in"
+            [loading]="loading"
+            class="w-full"
+          ></button>
+        </form>
+      </p-card>
+    </div>
   </div>
 </div>
