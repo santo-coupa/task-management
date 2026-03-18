@@ -4,6 +4,6 @@ export interface UpdateTaskRequest{
   name: string;
   description?: string;
   status?: UserTaskStatus;
-  assigneeId?: string | null;
+  assigneeId: string | null;
   dueDate?: string;
 }
