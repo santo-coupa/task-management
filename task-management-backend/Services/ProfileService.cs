@@ -1,0 +1,92 @@
+using task_management_backend.Database;
+using task_management_backend.Dto.Profile;
+using task_management_backend.Services.Interfaces;
+
+namespace task_management_backend.Services;
+
+public class ProfileService : IProfileService
+{
+  private readonly ApplicationDbContext DbContext;
+
+  public ProfileService(ApplicationDbContext dbContext)
+  {
+    DbContext = dbContext;
+  }
+
+  public GetProfileResponse GetProfiles(Guid userId)
+  {
+    var user = DbContext.Users
+      .FirstOrDefault(u => u.Id == userId);
+
+    if(user == null)
+      throw new ArgumentException("User not found");
+
+    return MaptoGetProfileResponse(user);
+  }
+
+  public GetProfileResponse UpdateProfile(Guid userId, UpdateProfileRequest request)
+  {
+    var user = DbContext.Users
+      .FirstOrDefault(u => u.Id == userId);
+
+    if(user == null)
+      throw new ArgumentException("User not found");
+
+    if(!string.IsNullOrWhiteSpace(request.FirstName))
+      user.FirstName = request.FirstName;
+
+    if(!string.IsNullOrWhiteSpace(request.LastName))
+      user.LastName = request.LastName;
+
+    if(!string.IsNullOrWhiteSpace(request.Email))
+      user.Email = request.Email;
+
+    if(!string.IsNullOrWhiteSpace(request.Title))
+      user.Title = request.Title;
+
+    user.UpdatedAt = DateTime.UtcNow;
+
+    DbContext.SaveChanges();
+
+    return MaptoGetProfileResponse(user);
+  }
+
+  public void ChangePassword(Guid userId, ChangePasswordRequest request)
+  {
+    var user = DbContext.Users
+      .FirstOrDefault(u => u.Id == userId);
+
+    if (user == null)
+      throw new ArgumentException("User not found");
+
+    var isValid = BCrypt.Net.BCrypt.Verify(
+      request.CurrentPassword,
+      user.PasswordHashed
+    );
+
+    if (!isValid)
+      throw new ArgumentException("Current password is incorrect");
+
+    user.PasswordHashed = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+
+    user.UpdatedAt = DateTime.UtcNow;
+
+    DbContext.SaveChanges();
+  }
+
+  private static GetProfileResponse MaptoGetProfileResponse(User user)
+  {
+    return new GetProfileResponse
+    {
+      Id = user.Id,
+      Username = user.Username,
+      Email = user.Email,
+      Role = user.Role,
+      FirstName = user.FirstName,
+      LastName = user.LastName,
+      Title = user.Title,
+      CreatedAt = user.CreatedAt,
+      UpdatedAt = user.UpdatedAt
+    };
+  }
+}
